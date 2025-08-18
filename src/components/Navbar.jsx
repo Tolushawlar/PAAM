@@ -4,7 +4,7 @@ import profilePic from "../assets/profile-picture-sm.svg";
 
 function Navbar({ username, src }) {
   const [imgSrc, setImgSrc] = useState(src || profilePic);
-  const handleName = username || "Sarah Miller"
+  const handleName = username || "Sarah Muse"
 
 
   return (
