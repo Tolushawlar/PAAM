@@ -1,12 +1,17 @@
 import Sidebar from './components/Sidebar'
 import Dashboard from './components/Dashboard'
-import './App.css'
+import Navbar from './components/Navbar'
 
 function App() {
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar />
-      <Dashboard />
+    <div>
+      <div>
+        <Navbar />
+      </div>
+      <div className="flex h-screen bg-gray-100">
+        <Sidebar />
+        <Dashboard />
+      </div>
     </div>
   )
 }
