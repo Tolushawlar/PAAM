@@ -1,21 +1,20 @@
-import Sidebar from './components/Sidebar'
-import Dashboard from './components/Dashboard'
-import Navbar from './components/Navbar'
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import Layout from './components/Layout'
+import AdminDashboard from './pages/AdminDashboard'
+import UserDashboard from './pages/UserDashboard'
 
 function App() {
   return (
-    <div>
-      <div>
-        <Navbar
-          username=""
-          src=""
-        />
-      </div>
-      <div className="flex h-screen bg-gray-100">
-        <Sidebar />
-        <Dashboard />
-      </div>
-    </div>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/user" element={<UserDashboard />} />
+          <Route path="/" element={<Navigate to="/admin" replace />} />
+        </Routes>
+      </Layout>
+    </Router>
   )
 }
 
