@@ -4,14 +4,8 @@ import profilePic from "../assets/profile-picture-sm.svg";
 
 function Navbar({ username, src }) {
   const [imgSrc, setImgSrc] = useState(src || profilePic);
+  const handleName = username || "Sarah Miller"
 
-  function handleName(){
-    if(username != ""){
-      return username
-    } else {
-      return "Sarah Miller"
-    }
-  }
 
   return (
     <header className="flex justify-between items-center p-4 bg-white shadow-sm border-b">
@@ -22,7 +16,7 @@ function Navbar({ username, src }) {
         </h1>
       </div>
       <div className="flex items-center gap-3">
-        <span className="text-sm font-medium text-gray-700">{handleName()}</span>
+        <span className="text-[20px] font-medium text-gray-700">{handleName}</span>
         <img
           src={imgSrc}
           alt={`${username}'s profile picture`}
