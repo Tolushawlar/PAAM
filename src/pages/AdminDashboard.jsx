@@ -1,11 +1,12 @@
 import React from 'react'
+import InfoCard from '../components/InfoCard'
 
 export default function AdminDashboard() {
   const stats = [
-    { title: "Total Users", value: "1,234", color: "bg-blue-500" },
-    { title: "Active Members", value: "987", color: "bg-green-500" },
-    { title: "Pending Reports", value: "23", color: "bg-yellow-500" },
-    { title: "Events This Month", value: "12", color: "bg-purple-500" }
+    { title: "Total Members", number: "12,345", percent: "+10%"},
+    { title: "Active Members", number: "8,765",percent: "+5%"},
+    { title: "Total Donations", number: "$50,000",percent: "+15%"},
+    { title: "Training", number: "75%",percent: "+8%"}
   ]
 
   return (
@@ -14,8 +15,15 @@ export default function AdminDashboard() {
         <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
         <p className="text-gray-600">Manage users, content, and system settings.</p>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+      <div className="flex gap-[16px] h-[174px] p-[16px]">
+        {stats.map((stat, index) => (
+          <InfoCard  key={index} title={stat.title} number={stat.number} percent={stat.percent} color= "bg-[#b8144a]/20" />
+        ))}  
+      </div>
+
+
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat, index) => (
           <div key={index} className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
@@ -29,7 +37,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
