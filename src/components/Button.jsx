@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Button({ title, backgroundColor, textColor, link, width, height, icon, onClick }) {
   const buttonStyle = {
-    backgroundColor: backgroundColor || '#0d80f2',
+    backgroundColor: backgroundColor || '#B8144A',
     color: textColor || 'white',
     width: width || 'auto',
     height: height || '40px'

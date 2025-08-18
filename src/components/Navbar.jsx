@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { MdKeyboardArrowDown, MdAdminPanelSettings, MdPerson } from "react-icons/md";
@@ -26,7 +27,7 @@ function Navbar({ username, src }) {
 
 
   return (
-    <header className="flex justify-between items-center p-4 bg-white shadow-sm border-b">
+    <header className="flex fixed w-full justify-between items-center p-4 bg-white shadow-sm border-b z-50">
       <div className="flex items-center gap-4">
         <img src={paamLogo} alt="PAAM logo" className="h-8 w-auto" />
         <h1 className="text-lg font-semibold text-gray-800">
@@ -34,7 +35,7 @@ function Navbar({ username, src }) {
         </h1>
       </div>
       <div className="flex items-center gap-4">
-        <div className="relative" ref={dropdownRef}>
+        {/* <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowRoleDropdown(!showRoleDropdown)}
             className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
@@ -76,7 +77,7 @@ function Navbar({ username, src }) {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
         
         <div className="flex items-center gap-3">
           <span className="text-[20px] font-medium text-gray-700">{handleName}</span>
