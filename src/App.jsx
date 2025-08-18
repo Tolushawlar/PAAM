@@ -6,7 +6,10 @@ function App() {
   return (
     <div>
       <div>
-        <Navbar />
+        <Navbar
+          username=""
+          src=""
+        />
       </div>
       <div className="flex h-screen bg-gray-100">
         <Sidebar />
