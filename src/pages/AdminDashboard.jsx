@@ -4,13 +4,6 @@ import MetricCard from "../components/MetricCard";
 import Button from "../components/Button";
 
 export default function AdminDashboard() {
-  const stats = [
-    { title: "Total Members", number: "12,345", percent: "+10%" },
-    { title: "Active Members", number: "8,765", percent: "+5%" },
-    { title: "Total Donations", number: "$50,000", percent: "+15%" },
-    { title: "Training", number: "75%", percent: "+8%" },
-  ];
-
   const metricData = [
     {
       title: "Donation Trends",
@@ -30,17 +23,28 @@ export default function AdminDashboard() {
     },
   ];
 
+  const InfoCardStats = [
+    { title: "Total Members", number: "12,345", percent: "+10%" },
+    { title: "Active Members", number: "8,765", percent: "+5%" },
+    { title: "Total Donations", number: "$50,000", percent: "+15%" },
+    { title: "Training", number: "75%", percent: "+8%" },
+  ];
+
   return (
     <div className="p-6 w-full">
+      {/* Header Section */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-gray-600">
-          Manage users, content, and system settings.
+        <h1 className="text-3xl font-bold text-[#0d141c] pb-2">
+          Dashboard Overview
+        </h1>
+        <p className="text-xl font-medium text-gray-600">
+          High-Level Analytics & Management Tools
         </p>
       </div>
 
-      <div className="flex gap-[16px] h-[174px] p-[16px]">
-        {stats.map((stat, index) => (
+      {/* Info Cards Section */}
+      <div className="flex justify-between gap-4 flex-wrap">
+        {InfoCardStats.map((stat, index) => (
           <InfoCard
             key={index}
             title={stat.title}
@@ -51,6 +55,7 @@ export default function AdminDashboard() {
         ))}
       </div>
 
+      {/* Metric Cards Section */}
       <div className="flex justify-between gap-6 pr-5 mt-8 w-full">
         {metricData.map((metric, index) => (
           <div key={index} className="flex-1">
@@ -66,34 +71,19 @@ export default function AdminDashboard() {
         ))}
       </div>
 
+      {/* Quick Access Tools Section */}
       <div className="container mt-8">
         <div className="container p-4">
           <h1 className="text-xl font-semibold text-black mb-6">
             Quick Access Tools
           </h1>
-          <div className="flex flex-wrap items-start gap-1">
-            <Button
-              title="Add New Coordinator"
-              width="200px"
-              onClick={() => {}}
-            />
+          <div className="flex flex-wrap items-start gap-2">
+            <Button title="Add New Coordinator" width="200px" onClick={() => {}} />
             <Button title="Search Member" width="170px" onClick={() => {}} />
             <Button title="Review Content" width="150px" onClick={() => {}} />
-            <Button
-              title="Manage Coordinators"
-              className="w-auto"
-              onClick={() => {}}
-            />
-            <Button
-              title="Write Examination Report"
-              width="200px"
-              onClick={() => {}}
-            />
-            <Button
-              title="Download Report Summary"
-              width="200px"
-              onClick={() => {}}
-            />
+            <Button title="Manage Coordinators" className="w-auto" onClick={() => {}} />
+            <Button title="Write Examination Report" width="200px" onClick={() => {}} />
+            <Button title="Download Report Summary" width="200px" onClick={() => {}} />
           </div>
         </div>
       </div>
