@@ -81,7 +81,6 @@ const Sidebar = ({ userType }) => {
           <Button
             title="Logout"
             icon={<MdLogout size={16} />}
-            backgroundColor="#ef4444"
             textColor="white"
             width="100%"
             onClick={() => {
