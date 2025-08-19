@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Layout from './components/Layout'
 import AdminDashboard from './pages/AdminDashboard'
 import UserDashboard from './pages/UserDashboard'
+import MemberManagement from './pages/MemberManagement'
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/MemberManagement" element={<MemberManagement/>} />
           <Route path="/user" element={<UserDashboard />} />
           <Route path="/" element={<Navigate to="/admin" replace />} />
         </Routes>
