@@ -43,7 +43,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Info Cards Section */}
-      <div className="flex justify-between gap-4 flex-wrap">
+      <div className="flex justify-start gap-4">
         {InfoCardStats.map((stat, index) => (
           <InfoCard
             key={index}
