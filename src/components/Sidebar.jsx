@@ -7,11 +7,11 @@ import Button from "./Button";
 
 // Import sidebar icons
 import dashboardIcon from "../assets/sidebar-icons/home-b.svg";
-import usersIcon from "../assets/sidebar-icons/member.svg";
-import organizationsIcon from "../assets/sidebar-icons/coordinator.svg";
+import memberIcon from "../assets/sidebar-icons/member.svg";
+import coordinatorIcon from "../assets/sidebar-icons/coordinator.svg";
 import contentIcon from "../assets/sidebar-icons/content.svg";
 import reportsIcon from "../assets/sidebar-icons/reports.svg";
-import eventsIcon from "../assets/sidebar-icons/event.svg";
+import eventIcon from "../assets/sidebar-icons/event.svg";
 import examinationIcon from "../assets/sidebar-icons/examination.svg";
 
 const Sidebar = ({ userType, onToggle }) => {
@@ -28,18 +28,19 @@ const Sidebar = ({ userType, onToggle }) => {
 
   const adminMenuItems = [
     { icon: dashboardIcon, label: "Dashboard", path: "/admin" },
-    { icon: usersIcon, label: "Member Management", path: "/admin/MemberManagement" },
-    { icon: organizationsIcon, label: "Coordinators", path: "/admin/CoordinatorManagement" },
-    { icon: reportsIcon, label: "Reports", path: "/admin/reports" },
-    { icon: contentIcon, label: "Content", path: "/admin/content" },
-    { icon: examinationIcon, label: "Settings", path: "/admin/settings" },
+    { icon: memberIcon, label: "Member Management", path: "/admin/MemberManagement" },
+    { icon: coordinatorIcon, label: "Coordinator Management", path: "/admin/CoordinatorManagement" },
+    { icon: reportsIcon, label: "Reports", path: "/admin/Reports" },
+    { icon: contentIcon, label: "Content Management", path: "/admin/ContentManagement" },
+    { icon: examinationIcon, label: "Examination Management", path: "/admin/ExaminationManagement" },
+    { icon: eventIcon, label: "Event Management", path: "/admin/EventManagement" },
   ];
 
   const userMenuItems = [
     { icon: dashboardIcon, label: "Dashboard", path: "/user" },
-    { icon: eventsIcon, label: "Events", path: "/user/events" },
+    { icon: eventIcon, label: "Events", path: "/user/events" },
     { icon: contentIcon, label: "Messages", path: "/user/messages" },
-    { icon: usersIcon, label: "Profile", path: "/user/profile" },
+    { icon: memberIcon, label: "Profile", path: "/user/profile" },
     { icon: examinationIcon, label: "Settings", path: "/user/settings" },
     { icon: reportsIcon, label: "Help", path: "/user/help" },
   ];
@@ -66,7 +67,7 @@ const Sidebar = ({ userType, onToggle }) => {
                 <div
                   key={index}
                   onClick={() => navigate(item.path)}
-                  className={`flex items-center ${isCollapsed ? 'justify-center w-[40px]' : 'gap-3'} px-3 py-2 rounded-lg cursor-pointer h-[40px]  transition-colors ${
+                  className={`flex items-center ${isCollapsed ? 'justify-center w-[40px]' : 'gap-3'} px-3 py-2 rounded-lg cursor-pointer h-[40px] transition-colors ${
                     isActive
                       ? "text-black font-bold bg-[#B8144A]/20"
                       : "hover:bg-gray-50 text-gray-900"

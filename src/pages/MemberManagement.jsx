@@ -1,15 +1,22 @@
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
 import FilterButton from "../components/FilterButton";
 import TableList from "../components/TableList";
 
 function MemberManagement() {
+  const navigate = useNavigate();
+
   return (
     <div className="p-6">
       <div className="flex justify-between mb-3">
         <h1 className="font-bold text-3xl pb-5">Members</h1>
-        <Button title="Add Member" />
+        <Button
+          title="Add Member"
+          onClick={() => navigate("/admin/MemberManagement/MemberProfile")}
+        />
       </div>
+
       <div className="space-y-4">
         <SearchBar />
         <div className="flex gap-2 mt-10">
@@ -19,6 +26,7 @@ function MemberManagement() {
           <FilterButton label="Pending" />
           <FilterButton label="Joined" />
         </div>
+
         <TableList
           classname="mt-5"
           data={[
