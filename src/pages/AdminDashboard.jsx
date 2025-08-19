@@ -2,7 +2,7 @@ import React from 'react'
 import InfoCard from '../components/InfoCard'
 
 export default function AdminDashboard() {
-  const stats = [
+  const InfoCardStats = [
     { title: "Total Members", number: "12,345", percent: "+10%"},
     { title: "Active Members", number: "8,765",percent: "+5%"},
     { title: "Total Donations", number: "$50,000",percent: "+15%"},
@@ -12,12 +12,12 @@ export default function AdminDashboard() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-gray-600">Manage users, content, and system settings.</p>
+        <h1 className="text-3xl font-bold text-[#0d141c] pb-5">Dashboard Overview</h1>
+        <p className="text-xl font-bold text-[#0d141c]">High-Level Analytics</p>
       </div>
 
-      <div className="flex gap-[16px] h-[174px] p-[16px]">
-        {stats.map((stat, index) => (
+      <div className="flex justify-between gap-[16px] h-[174px]">
+        {InfoCardStats.map((stat, index) => (
           <InfoCard  key={index} title={stat.title} number={stat.number} percent={stat.percent} color= "bg-[#b8144a]/20" />
         ))}  
       </div>

@@ -19,7 +19,7 @@ const Sidebar = ({ userType }) => {
 
   const adminMenuItems = [
     { icon: dashboardIcon, label: "Dashboard", path: "/admin" },
-    { icon: usersIcon, label: "Users", path: "/admin/users" },
+    { icon: usersIcon, label: "Member Management", path: "/admin/MemberManagement" },
     { icon: organizationsIcon, label: "Organizations", path: "/admin/organizations" },
     { icon: contentIcon, label: "Content", path: "/admin/content" },
     { icon: reportsIcon, label: "Reports", path: "/admin/reports" },
