@@ -14,7 +14,7 @@ export default function Layout({ children }) {
       <Navbar username={isAdmin ? "Admin User" : "Regular User"} />
       <div className="flex flex-1 pt-16">
         <Sidebar userType={userType} />
-        <div className="flex-1 ml-80 overflow-auto bg-gray-100">{children}</div>
+        <div className="flex-1 ml-80 overflow-auto">{children}</div>
       </div>
     </div>
   );

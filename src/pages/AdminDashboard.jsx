@@ -1,146 +1,102 @@
-import React from 'react'
-import InfoCard from '../components/InfoCard'
+import React from "react";
+import InfoCard from "../components/InfoCard";
+import MetricCard from "../components/MetricCard";
+import Button from "../components/Button";
 
 export default function AdminDashboard() {
   const stats = [
-    { title: "Total Members", number: "12,345", percent: "+10%"},
-    { title: "Active Members", number: "8,765",percent: "+5%"},
-    { title: "Total Donations", number: "$50,000",percent: "+15%"},
-    { title: "Training", number: "75%",percent: "+8%"}
-  ]
+    { title: "Total Members", number: "12,345", percent: "+10%" },
+    { title: "Active Members", number: "8,765", percent: "+5%" },
+    { title: "Total Donations", number: "$50,000", percent: "+15%" },
+    { title: "Training", number: "75%", percent: "+8%" },
+  ];
+
+  const metricData = [
+    {
+      title: "Donation Trends",
+      number: "$45,230",
+      timeline: "Last Month",
+      percentage: "+12",
+      graphType: "line",
+      graphData: [20, 35, 45, 30, 55, 40, 65, 50, 70, 60, 80, 75],
+    },
+    {
+      title: "Content Engagement",
+      number: "1,234",
+      timeline: "Last Week",
+      percentage: "+8",
+      graphType: "bar",
+      graphData: [30, 45, 35, 50, 40, 60, 55, 70, 65, 80, 75, 85],
+    },
+  ];
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-full">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-gray-600">Manage users, content, and system settings.</p>
+        <p className="text-gray-600">
+          Manage users, content, and system settings.
+        </p>
       </div>
 
       <div className="flex gap-[16px] h-[174px] p-[16px]">
         {stats.map((stat, index) => (
-          <InfoCard  key={index} title={stat.title} number={stat.number} percent={stat.percent} color= "bg-[#b8144a]/20" />
-        ))}  
+          <InfoCard
+            key={index}
+            title={stat.title}
+            number={stat.number}
+            percent={stat.percent}
+            color="bg-[#b8144a]/20"
+          />
+        ))}
       </div>
 
-
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat, index) => (
-          <div key={index} className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className={`w-12 h-12 ${stat.color} rounded-lg flex items-center justify-center`}>
-                <div className="w-6 h-6 bg-white rounded"></div>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-              </div>
-            </div>
+      <div className="flex justify-between gap-6 pr-5 mt-8 w-full">
+        {metricData.map((metric, index) => (
+          <div key={index} className="flex-1">
+            <MetricCard
+              title={metric.title}
+              number={metric.number}
+              timeline={metric.timeline}
+              percentage={metric.percentage}
+              graphType={metric.graphType}
+              graphData={metric.graphData}
+            />
           </div>
         ))}
-      </div> */}
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">System Activities</h3>
-          <div className="space-y-3">
-            <div className="flex items-center p-3 bg-gray-50 rounded">
-              <div className="w-2 h-2 bg-red-500 rounded-full mr-3"></div>
-              <span className="text-sm">System maintenance scheduled</span>
-            </div>
-            <div className="flex items-center p-3 bg-gray-50 rounded">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-              <span className="text-sm">New user registrations: 15</span>
-            </div>
-            <div className="flex items-center p-3 bg-gray-50 rounded">
-              <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-              <span className="text-sm">Content approved: 8</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Admin Actions</h3>
-          <div className="space-y-3">
-            <button className="w-full text-left p-3 bg-red-50 hover:bg-red-100 rounded transition-colors">
-              Manage Users
-            </button>
-            <button className="w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded transition-colors">
-              System Settings
-            </button>
-            <button className="w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded transition-colors">
-              Content Moderation
-            </button>
-          </div>
-        </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">System Activities</h3>
-          <div className="space-y-3">
-            <div className="flex items-center p-3 bg-gray-50 rounded">
-              <div className="w-2 h-2 bg-red-500 rounded-full mr-3"></div>
-              <span className="text-sm">System maintenance scheduled</span>
-            </div>
-            <div className="flex items-center p-3 bg-gray-50 rounded">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-              <span className="text-sm">New user registrations: 15</span>
-            </div>
-            <div className="flex items-center p-3 bg-gray-50 rounded">
-              <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-              <span className="text-sm">Content approved: 8</span>
-            </div>
-          </div>
-        </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Admin Actions</h3>
-          <div className="space-y-3">
-            <button className="w-full text-left p-3 bg-red-50 hover:bg-red-100 rounded transition-colors">
-              Manage Users
-            </button>
-            <button className="w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded transition-colors">
-              System Settings
-            </button>
-            <button className="w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded transition-colors">
-              Content Moderation
-            </button>
-          </div>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">System Activities</h3>
-          <div className="space-y-3">
-            <div className="flex items-center p-3 bg-gray-50 rounded">
-              <div className="w-2 h-2 bg-red-500 rounded-full mr-3"></div>
-              <span className="text-sm">System maintenance scheduled</span>
-            </div>
-            <div className="flex items-center p-3 bg-gray-50 rounded">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-              <span className="text-sm">New user registrations: 15</span>
-            </div>
-            <div className="flex items-center p-3 bg-gray-50 rounded">
-              <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-              <span className="text-sm">Content approved: 8</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Admin Actions</h3>
-          <div className="space-y-3">
-            <button className="w-full text-left p-3 bg-red-50 hover:bg-red-100 rounded transition-colors">
-              Manage Users
-            </button>
-            <button className="w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded transition-colors">
-              System Settings
-            </button>
-            <button className="w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded transition-colors">
-              Content Moderation
-            </button>
+      <div className="container mt-8">
+        <div className="container p-4">
+          <h1 className="text-xl font-semibold text-black mb-6">
+            Quick Access Tools
+          </h1>
+          <div className="flex flex-wrap items-start gap-1">
+            <Button
+              title="Add New Coordinator"
+              width="200px"
+              onClick={() => {}}
+            />
+            <Button title="Search Member" width="170px" onClick={() => {}} />
+            <Button title="Review Content" width="150px" onClick={() => {}} />
+            <Button
+              title="Manage Coordinators"
+              className="w-auto"
+              onClick={() => {}}
+            />
+            <Button
+              title="Write Examination Report"
+              width="200px"
+              onClick={() => {}}
+            />
+            <Button
+              title="Download Report Summary"
+              width="200px"
+              onClick={() => {}}
+            />
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

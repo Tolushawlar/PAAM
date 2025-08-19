@@ -52,15 +52,18 @@ export default function UserDashboard() {
 
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-          <div className="space-y-3">
-            <button className="w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded transition-colors">
+          <div className="grid grid-cols-2 gap-3">
+            <button className="text-left p-3 bg-blue-50 hover:bg-blue-100 rounded transition-colors">
               View My Profile
             </button>
-            <button className="w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded transition-colors">
+            <button className="text-left p-3 bg-green-50 hover:bg-green-100 rounded transition-colors">
               Browse Events
             </button>
-            <button className="w-full text-left p-3 bg-purple-50 hover:bg-purple-100 rounded transition-colors">
+            <button className="text-left p-3 bg-purple-50 hover:bg-purple-100 rounded transition-colors">
               Check Messages
+            </button>
+            <button className="text-left p-3 bg-yellow-50 hover:bg-yellow-100 rounded transition-colors">
+              View Reports
             </button>
           </div>
         </div>
