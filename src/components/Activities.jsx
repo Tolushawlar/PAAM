@@ -1,9 +1,4 @@
-function Activities() {
-  const activitiesData = [
-      { date: "2024-07-20", type: "Completed a module", description: " Shared an article on community building strategies" },
-      { date: "2024-07-15", type: "Took examination", description: "Participated in a discussion about platform features" },
-      { date: "2024-07-10", type: "Reaction", description: "Liked a post about upcoming events" },
-  ];
+function Activities({activitiesData}) {
   return (
       <div className="overflow-x-auto pl-5">
           <table className="table-fixed w-full border border-gray-300">

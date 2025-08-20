@@ -1,10 +1,4 @@
-function PersonalInfo() {
-  const personalInfo = [
-      { key: "Full Name", value: "Olivia Bennett" },
-      { key: "Email", value: "olivia.bennett@email.com" },
-      { key: "Phone Number", value: "(555) 123-4567" },
-      { key: "Location", value: "New York, NY" },
-  ];
+function PersonalInfo({personalInfo}) {
   return (
       <div>
           <h1 className="font-bold text-xl p-5">Personal Information</h1>
