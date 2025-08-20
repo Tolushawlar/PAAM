@@ -60,7 +60,6 @@ function MemberManagement() {
         <div className="flex space-x-6 mr-10">
           <Button
             title="Add Member"
-            onClick={() => navigate("/admin/MemberManagement/MemberProfile")}
           />
         </div>
       </div>

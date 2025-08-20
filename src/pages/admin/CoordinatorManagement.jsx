@@ -1,8 +1,10 @@
 import SearchBar from "../../UI/SearchBar";
 import Button from "../../UI/Button";
 import FilterButton from "../../UI/FilterButton";
+import { useNavigate } from "react-router-dom";
 
 function CoordinatorManagement() {
+  const navigate = useNavigate();
   const coordinators = [
     {
       id: 1,
@@ -119,7 +121,7 @@ function CoordinatorManagement() {
                       {coordinator.lastActive}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-indigo-600 hover:text-indigo-900 mr-4">
+                      <button className="text-indigo-600 hover:text-indigo-900 mr-4" onClick={() => navigate("/admin/CoordinatorManagement/CoordinatorProfile")} >
                         View
                       </button>
                       <button className="text-red-600 hover:text-red-900">

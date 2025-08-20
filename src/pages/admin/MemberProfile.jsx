@@ -9,13 +9,24 @@ function MemberProfile() {
         { title: "Exam Scores", number: "320" },
         { title: "Meetings Attended", number: "55" }
     ];
+      const personalInfo = [
+      { key: "Full Name", value: "Olivia Bennett" },
+      { key: "Email", value: "olivia.bennett@email.com" },
+      { key: "Phone Number", value: "(555) 123-4567" },
+      { key: "Location", value: "New York, NY" },
+  ];
+   const activitiesData = [
+      { date: "2024-07-20", type: "Completed a module", description: " Shared an article on community building strategies" },
+      { date: "2024-07-15", type: "Took examination", description: "Participated in a discussion about platform features" },
+      { date: "2024-07-10", type: "Reaction", description: "Liked a post about upcoming events" },
+  ];
     return (
         <div className="p-6 w-full">
             <p className="p-4 font-medium text-xl"><span className="text-[#b8144a]">Members</span> / Member Profile</p>
-            <ProfileInfo />
+            <ProfileInfo fullName="Olivia Bennett" title="Member since January 15, 2022" id="123456789"/>
             <p className="font-bold text-xl p-5 ">Overview</p>
             <hr />
-            <PersonalInfo />
+            <PersonalInfo personalInfo={personalInfo}/>
             <div>
                 <h1 className="font-bold text-xl p-5">Activity Summary</h1>
                <div className="flex justify-start gap-6 p-5">
@@ -30,7 +41,7 @@ function MemberProfile() {
                </div>
             </div>
             <p className="font-bold text-xl p-5">Recent Activities</p>
-            <Activities />
+            <Activities activitiesData={activitiesData} />
         </div>
     );
 }
