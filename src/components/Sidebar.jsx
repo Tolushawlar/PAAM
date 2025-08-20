@@ -6,7 +6,8 @@ import { useState } from "react";
 import Button from "../UI/Button";
 
 // Import sidebar icons
-import dashboardIcon from "../assets/sidebar-icons/home-b.svg";
+import dashboardIcon from "../assets/sidebar-icons/home.svg";
+import dashboardIconB from "../assets/sidebar-icons/home-b.svg";
 import memberIcon from "../assets/sidebar-icons/member.svg";
 import memberIconB from "../assets/sidebar-icons/member-b.svg";
 import coordinatorIcon from "../assets/sidebar-icons/coordinator.svg";
@@ -33,7 +34,7 @@ const Sidebar = ({ userType, onToggle }) => {
   };
 
   const adminMenuItems = [
-    { icon: dashboardIcon, iconB: dashboardIcon, label: "Dashboard", path: "/admin" },
+    { icon: dashboardIcon, iconB: dashboardIconB, label: "Dashboard", path: "/admin" },
     { icon: memberIcon, iconB: memberIconB, label: "Member Management", path: "/admin/MemberManagement" },
     { icon: coordinatorIcon, iconB: coordinatorIconB, label: "Coordinator Management", path: "/admin/CoordinatorManagement" },
     { icon: reportsIcon, iconB: reportsIconB, label: "Reports", path: "/admin/Reports" },
@@ -43,7 +44,7 @@ const Sidebar = ({ userType, onToggle }) => {
   ];
 
   const userMenuItems = [
-    { icon: dashboardIcon, iconB: dashboardIcon, label: "Dashboard", path: "/user" },
+    { icon: dashboardIcon, iconB: dashboardIconB, label: "Dashboard", path: "/user" },
     { icon: eventIcon, iconB: eventIconB, label: "Events", path: "/user/events" },
     { icon: contentIcon, iconB: contentIconB, label: "Training", path: "/user/training" },
     { icon: memberIcon, iconB: memberIconB, label: "Profile", path: "/user/profile" },
