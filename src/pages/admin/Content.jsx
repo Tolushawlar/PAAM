@@ -1,10 +1,21 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../../UI/SearchBar";
 import Button from "../../UI/Button";
 import FilterButton from "../../UI/FilterButton";
 import ContentTable from "../../Components/ContentTable";
 
 export default function Content() {
+  const navigate = useNavigate();
+
+  const handleAddCourse = () => {
+    navigate('/admin/content/add-course');
+  };
+
+  const handleAddModule = () => {
+    navigate('/admin/content/add-module');
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between mb-10">
@@ -15,8 +26,8 @@ export default function Content() {
           </p>
         </div>
         <div className="flex space-x-6 mr-10">
-          <Button title="Add New Course" />
-          <Button title="Add New Module" />
+          <Button title="Add New Course" onClick={handleAddCourse} />
+          <Button title="Add New Module" onClick={handleAddModule} />
         </div>
       </div>
       <div className="space-y-4">
