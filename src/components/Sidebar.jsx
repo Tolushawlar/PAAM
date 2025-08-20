@@ -43,12 +43,12 @@ const Sidebar = ({ userType, onToggle }) => {
   ];
 
   const userMenuItems = [
-    { icon: dashboardIcon, label: "Dashboard", path: "/user" },
-    { icon: eventIcon, label: "Events", path: "/user/events" },
-    { icon: contentIcon, label: "Messages", path: "/user/messages" },
-    { icon: memberIcon, label: "Profile", path: "/user/profile" },
-    { icon: examinationIcon, label: "Settings", path: "/user/settings" },
-    { icon: reportsIcon, label: "Help", path: "/user/help" },
+    { icon: dashboardIcon, iconB: dashboardIcon, label: "Dashboard", path: "/user" },
+    { icon: eventIcon, iconB: eventIconB, label: "Events", path: "/user/events" },
+    { icon: contentIcon, iconB: contentIconB, label: "Training", path: "/user/training" },
+    { icon: memberIcon, iconB: memberIconB, label: "Profile", path: "/user/profile" },
+    { icon: examinationIcon, iconB: examinationIconB, label: "Examinations", path: "/user/examinations" },
+    { icon: reportsIcon, iconB: reportsIconB, label: "Reports", path: "/user/reports" },
   ];
 
   const menuItems = isAdmin ? adminMenuItems : userMenuItems;
