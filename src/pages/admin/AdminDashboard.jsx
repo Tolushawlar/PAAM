@@ -1,7 +1,7 @@
 import React from "react";
-import InfoCard from "../components/InfoCard";
-import MetricCard from "../components/MetricCard";
-import Button from "../components/Button";
+import InfoCard from "../../Components/InfoCard";
+import MetricCard from "../../Components/MetricCard";
+import Button from "../../UI/Button";
 
 export default function AdminDashboard() {
   const metricData = [
@@ -33,11 +33,9 @@ export default function AdminDashboard() {
   return (
     <div className="p-6 w-full">
       {/* Header Section */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-[#0d141c] pb-2">
-          Dashboard Overview
-        </h1>
-        <p className="text-xl font-medium text-gray-600">
+      <div className="flex flex-col justify-between mb-10">
+        <h1 className="font-bold text-3xl pb-5">Dashboard Overview</h1>
+        <p className="text-gray-500 text-sm">
           High-Level Analytics & Management Tools
         </p>
       </div>

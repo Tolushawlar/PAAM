@@ -1,8 +1,8 @@
 import React from "react";
-import SearchBar from "../components/SearchBar";
-import Button from "../components/Button";
-import FilterButton from "../components/FilterButton";
-import ContentTable from "../components/ContentTable";
+import SearchBar from "../../UI/SearchBar";
+import Button from "../../UI/Button";
+import FilterButton from "../../UI/FilterButton";
+import ContentTable from "../../Components/ContentTable";
 
 export default function Content() {
   return (

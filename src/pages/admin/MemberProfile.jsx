@@ -1,7 +1,7 @@
-import PersonalInfo from "../components/PersonalInfo";
-import ProfileInfo from "../components/ProfileInfo";
-import InfoCard from "../components/InfoCard";
-import Activities from "../components/Activities";
+import PersonalInfo from "../../Components/PersonalInfo";
+import ProfileInfo from "../../Components/ProfileInfo";
+import InfoCard from "../../Components/InfoCard";
+import Activities from "../../Components/Activities";
 
 function MemberProfile() {
     const InfoCardStats = [
