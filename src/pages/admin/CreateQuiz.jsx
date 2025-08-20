@@ -1,10 +1,45 @@
-import Button from "../../UI/Button";
-import InputBox from "../../UI/InputBox";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
 import Pagination from "../../UI/Pagination";
+import InputField from '../../UI/InputField';
+import SelectField from '../../UI/SelectField';
+import TextAreaField from '../../UI/TextAreaField';
+import Button from '../../UI/Button';
+import Breadcrumb from '../../components/Breadcrumb';
+
+
 
 function CreateQuiz() {
-    const navigate = useNavigate();
+
+    const breadcrumbItems = [
+        { label: 'Examination Management', href: '/admin/ExaminationManagemnt' },
+        { label: 'Create Quiz' }
+    ];
+
+    // formData extended to handle choices and correctAnswer
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        moduleId: '',
+        choice1: '',
+        choice2: '',
+        choice3: '',
+        choice4: '',
+        correctAnswer: ''
+    });
+
+    const handleInputChange = (field) => (e) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: e.target.value
+        }));
+    };
+
+    const moduleOptions = [
+        { value: '1', label: 'Financial Literacy Module' },
+        { value: '2', label: 'Leadership Training Module' },
+        { value: '3', label: 'Community Outreach Module' }
+    ];
+
     const questions = [
         {
             id: 1,
@@ -24,42 +59,86 @@ function CreateQuiz() {
             options: "Pacific, Atlantic, Indian, Arctic",
             correctAnswer: "Pacific"
         }
-
     ];
+
     return (
         <div className="p-6 w-full">
-            <p className="p-4 font-medium text-xl"><span className="text-[#b8144a]">Examination Management</span> / Create Quiz</p>
+            <Breadcrumb items={breadcrumbItems} />
+
             <div className="flex flex-col justify-between">
                 <h1 className="font-bold text-3xl pb-5">Create Quiz</h1>
                 <p className="text-gray-500 text-sm">
                     Fill in the details to create a new quiz for your course module.
                 </p>
             </div>
-            <div className="mb-3">
-                <InputBox label="Quiz Title" placeholder="Enter quiz title" />
-            </div>
-            <div className="p-4">
-                <p >Associated Module</p>
-                <select name="" id="">
-                    <option value="">Select Module</option>
-                    <option value="">Module 1</option>
-                    <option value="">Module 2</option>
-                </select>
-            </div>
-            <div>
-                <h1 className="font-bold text-xl p-5">Questions</h1>
-                <InputBox label="Question 1" placeholder="" />
-                <InputBox label="Answer Choice 1" placeholder="Enter  answer choice" />
-                <InputBox label="Answer Choice 2" placeholder="Enter  answer choice" />
-                <InputBox label="Answer Choice 3" placeholder="Enter  answer choice" />
-                <InputBox label="Answer Choice 4" placeholder="Enter  answer choice" />
-                <InputBox label="Correct Answer" placeholder="" />
-            </div>
-            <div className="p-4 flex justify-between">
-                <Button title="Add Question" />
-                <Button title="Create Quiz" />
+
+            {/* Quiz Title */}
+            <div className="mb-3 p-4">
+                <InputField
+                    label="Quiz Title"
+                    placeholder="Enter quiz title"
+                    value={formData.title}
+                    onChange={handleInputChange('title')}
+                    required
+                />
             </div>
 
+            {/* Module Selector */}
+            <div className="p-4">
+                <SelectField
+                    label="Associated Module"
+                    options={moduleOptions}
+                    value={formData.moduleId}
+                    onChange={handleInputChange('moduleId')}
+                    placeholder="Select a module"
+                    required
+                />
+            </div>
+
+            {/* Questions */}
+            <div>
+                <h1 className="font-bold text-xl p-5">Questions</h1>
+
+                <TextAreaField
+                    label="Question"
+                    placeholder="Enter the question"
+                    value={formData.description}
+                    onChange={handleInputChange('description')}
+                    rows={4}
+                    required
+                    className='p-4'
+                />
+
+                {/* Answer Choices Loop */}
+                {Array.from({ length: 4 }, (_, index) => (
+                    <div key={index} className='p-4'> 
+                        <InputField
+                            label={`Answer Choice ${index + 1}`}
+                            placeholder="Enter answer choice"
+                            value={formData[`choice${index + 1}`]}
+                            onChange={handleInputChange(`choice${index + 1}`)}
+                            required
+                        />
+                    </div>
+                ))}
+
+                {/* Correct Answer */}
+                <InputField
+                    label="Correct Answer"
+                    placeholder="Enter correct answer"
+                    value={formData.correctAnswer}
+                    onChange={handleInputChange('correctAnswer')}
+                    required
+                    className='p-4'
+                />
+
+                <div className="p-4 flex justify-between">
+                    <Button title="Add Question" />
+                    <Button title="Create Quiz" />
+                </div>
+            </div>
+
+            {/* Questions Table */}
             <div className="mt-5">
                 <div className="bg-white rounded-lg shadow overflow-hidden">
                     <table className="min-w-full divide-y divide-gray-200">
@@ -96,7 +175,6 @@ function CreateQuiz() {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <button
                                             className="text-indigo-600 hover:text-indigo-900 mr-4"
-                                            onClick={() => navigate()}
                                         >
                                             Edit
                                         </button>
@@ -111,7 +189,6 @@ function CreateQuiz() {
                     <Pagination />
                 </div>
             </div>
-
         </div>
     );
 }
