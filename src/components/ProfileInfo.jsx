@@ -1,4 +1,4 @@
-import Button from "./Button";
+import Button from "../UI/Button";
 import ProfilePic from "../assets/profile-picture-bg.svg"
 
 function ProfileInfo({fullName="Olivia Bennett",memberSince="Member since January 15, 2022", id="123456789"}) {

@@ -3,16 +3,22 @@ import { MdLogout } from "react-icons/md";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
-import Button from "./Button";
+import Button from "../UI/Button";
 
 // Import sidebar icons
 import dashboardIcon from "../assets/sidebar-icons/home-b.svg";
 import memberIcon from "../assets/sidebar-icons/member.svg";
+import memberIconB from "../assets/sidebar-icons/member-b.svg";
 import coordinatorIcon from "../assets/sidebar-icons/coordinator.svg";
+import coordinatorIconB from "../assets/sidebar-icons/coordinator-b.svg";
 import contentIcon from "../assets/sidebar-icons/content.svg";
+import contentIconB from "../assets/sidebar-icons/content-b.svg";
 import reportsIcon from "../assets/sidebar-icons/reports.svg";
+import reportsIconB from "../assets/sidebar-icons/reports-b.svg";
 import eventIcon from "../assets/sidebar-icons/event.svg";
+import eventIconB from "../assets/sidebar-icons/event-b.svg";
 import examinationIcon from "../assets/sidebar-icons/examination.svg";
+import examinationIconB from "../assets/sidebar-icons/examination-b.svg";
 
 const Sidebar = ({ userType, onToggle }) => {
   const navigate = useNavigate();
@@ -27,13 +33,13 @@ const Sidebar = ({ userType, onToggle }) => {
   };
 
   const adminMenuItems = [
-    { icon: dashboardIcon, label: "Dashboard", path: "/admin" },
-    { icon: memberIcon, label: "Member Management", path: "/admin/MemberManagement" },
-    { icon: coordinatorIcon, label: "Coordinator Management", path: "/admin/CoordinatorManagement" },
-    { icon: reportsIcon, label: "Reports", path: "/admin/Reports" },
-    { icon: contentIcon, label: "Content Management", path: "/admin/ContentManagement" },
-    { icon: examinationIcon, label: "Examination Management", path: "/admin/ExaminationManagement" },
-    { icon: eventIcon, label: "Event Management", path: "/admin/EventManagement" },
+    { icon: dashboardIcon, iconB: dashboardIcon, label: "Dashboard", path: "/admin" },
+    { icon: memberIcon, iconB: memberIconB, label: "Member Management", path: "/admin/MemberManagement" },
+    { icon: coordinatorIcon, iconB: coordinatorIconB, label: "Coordinator Management", path: "/admin/CoordinatorManagement" },
+    { icon: reportsIcon, iconB: reportsIconB, label: "Reports", path: "/admin/Reports" },
+    { icon: contentIcon, iconB: contentIconB, label: "Content Management", path: "/admin/content" },
+    { icon: examinationIcon, iconB: examinationIconB, label: "Examination Management", path: "/admin/ExaminationManagement" },
+    { icon: eventIcon, iconB: eventIconB, label: "Event Management", path: "/admin/EventManagement" },
   ];
 
   const userMenuItems = [
@@ -52,17 +58,30 @@ const Sidebar = ({ userType, onToggle }) => {
       <div className="flex min-h-[90vh] flex-col justify-between p-4">
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <button
-              onClick={handleToggle}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <HiMenuAlt2 size={20} className="text-gray-600" />
-            </button>
+            {isCollapsed ? (
+              <button
+                onClick={handleToggle}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <HiMenuAlt2 size={20} className="text-gray-600" />
+              </button>
+            ) : (
+              <div className="flex items-center justify-between w-full">
+                <p className="text-sm text-gray-600">{userType}</p>
+                <button
+                  onClick={handleToggle}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <HiMenuAlt2 size={20} className="text-gray-600" />
+                </button>
+              </div>
+            )}
           </div>
-          {!isCollapsed && <p className="text-sm text-gray-600">{userType}</p>}
           <div className="flex flex-col gap-2">
             {menuItems.map((item, index) => {
-              const isActive = location.pathname === item.path;
+              const isActive = item.path === '/admin' 
+                ? location.pathname === '/admin'
+                : location.pathname === item.path || location.pathname.startsWith(item.path + '/');
               return (
                 <div
                   key={index}
@@ -75,7 +94,7 @@ const Sidebar = ({ userType, onToggle }) => {
                   title={isCollapsed ? item.label : ''}
                 >
                   <img
-                    src={item.icon}
+                    src={isActive ? item.iconB : item.icon}
                     alt={item.label}
                     className={`${isCollapsed ? 'w-10 h-10' : 'w-5 h-5'} z-10`}
                   />

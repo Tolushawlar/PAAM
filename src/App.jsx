@@ -1,13 +1,13 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import Layout from './components/Layout'
-import AdminDashboard from './pages/AdminDashboard'
-import UserDashboard from './pages/UserDashboard'
-import MemberManagement from './pages/MemberManagement'
-import MemberProfile from './pages/MemberProfile'
-import CoordinatorManagement from './pages/CoordinatorManagement'
-import Reports from './pages/Reports'
-import Content from './pages/Content'
+import Layout from './Components/Layout'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import UserDashboard from './pages/user/UserDashboard'
+import MemberManagement from './pages/admin/MemberManagement'
+import MemberProfile from './pages/admin/MemberProfile'
+import CoordinatorManagement from './pages/admin/CoordinatorManagement'
+import Reports from './pages/admin/Reports'
+import Content from './pages/admin/Content'
 
 function App() {
   return (
