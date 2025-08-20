@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Breadcrumb from '../../Components/Breadcrumb';
+import Breadcrumb from '../../components/Breadcrumb';
 import InputField from '../../UI/InputField';
 import SelectField from '../../UI/SelectField';
 import TextAreaField from '../../UI/TextAreaField';
