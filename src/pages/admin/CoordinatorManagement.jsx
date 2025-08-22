@@ -49,15 +49,15 @@ function CoordinatorManagement() {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between mb-10">
-        <div className="flex flex-col justify-between">
-          <h1 className="font-bold text-3xl pb-5">Coordinator Management</h1>
-          <p className="text-gray-500 text-sm">
+      <div className="flex justify-between items-start mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Coordinator Management</h1>
+          <p className="text-gray-600 text-sm">
             Manage all coordinators and their assignments on the platform
           </p>
         </div>
         <div className="flex space-x-6 mr-10">
-          <Button title="Add Coordinator" />
+          <Button title="Add Coordinator" onClick={() => navigate("/admin/CoordinatorManagement/AddCoordinator")} />
         </div>
       </div>
       <div className="space-y-4">

@@ -40,7 +40,7 @@ export default function AddModule() {
       
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Module</h1>
-        <p className="text-gray-600">Create a new learning module for the platform</p>
+        <p className="text-gray-600 text-sm">Create a new learning module for the platform</p>
       </div>
 
       <div className="bg-white p-6 max-w-2xl">
