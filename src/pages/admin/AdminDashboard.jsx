@@ -33,9 +33,9 @@ export default function AdminDashboard() {
   return (
     <div className="p-6 w-full">
       {/* Header Section */}
-      <div className="flex flex-col justify-between mb-10">
-        <h1 className="font-bold text-3xl pb-5">Dashboard Overview</h1>
-        <p className="text-gray-500 text-sm">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard Overview</h1>
+        <p className="text-gray-600 text-sm">
           High-Level Analytics & Management Tools
         </p>
       </div>
@@ -72,9 +72,9 @@ export default function AdminDashboard() {
       {/* Quick Access Tools Section */}
       <div className="container mt-8">
         <div className="container p-4">
-          <h1 className="text-xl font-semibold text-black mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">
             Quick Access Tools
-          </h1>
+          </h2>
           <div className="flex flex-wrap items-start gap-2 w-[30vw]">
             <Button title="Add New Coordinator" width="200px" onClick={() => {}} />
             <Button title="Search Member" width="170px" onClick={() => {}} />

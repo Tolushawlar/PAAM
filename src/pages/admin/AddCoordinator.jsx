@@ -1,79 +1,84 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../../UI/SearchBar";
 import Button from "../../UI/Button";
-import FilterButton from "../../UI/FilterButton";
+import Breadcrumb from "../../Components/Breadcrumb";
 
-function MemberManagement() {
+function AddCoordinator() {
   const navigate = useNavigate();
+  const [selectedRoles, setSelectedRoles] = useState({});
+
+  const breadcrumbItems = [
+    { label: 'Coordinator Management', href: '/admin/CoordinatorManagement' },
+    { label: 'Add Coordinator' }
+  ];
 
   const members = [
     {
       id: 1,
       name: "John Doe",
-      status: "Active",
-      joined: "2024-01-15",
-      lastActive: "2024-01-20",
       email: "john@example.com",
+      joined: "2024-01-15",
+      status: "Active"
     },
     {
       id: 2,
       name: "Jane Smith",
-      status: "Inactive",
-      joined: "2024-01-10",
-      lastActive: "2024-01-18",
       email: "jane@example.com",
+      joined: "2024-01-10",
+      status: "Active"
     },
     {
       id: 3,
       name: "Mike Johnson",
-      status: "Active",
-      joined: "2024-01-12",
-      lastActive: "2024-01-21",
       email: "mike@example.com",
+      joined: "2024-01-12",
+      status: "Active"
     },
+    {
+      id: 4,
+      name: "Sarah Wilson",
+      email: "sarah@example.com",
+      joined: "2024-01-08",
+      status: "Active"
+    }
   ];
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Active":
-        return "bg-green-100 text-green-800";
-      case "Inactive":
-        return "bg-red-100 text-red-800";
-      case "Pending":
-        return "bg-yellow-100 text-yellow-800";
-      case "Joined":
-        return "bg-blue-100 text-blue-800";
-      default:
-        return "bg-gray-100 text-gray-800";
+  const coordinatorRoles = [
+    "Local Gov Council",
+    "Divisional",
+    "Provincial",
+    "Regional",
+    "National"
+  ];
+
+  const handleRoleChange = (memberId, role) => {
+    setSelectedRoles(prev => ({
+      ...prev,
+      [memberId]: role
+    }));
+  };
+
+  const handleAssignCoordinator = (memberId) => {
+    const role = selectedRoles[memberId];
+    if (role) {
+      console.log(`Assigning ${role} role to member ${memberId}`);
+      // Handle assignment logic here
     }
   };
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-start mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Member Management</h1>
-          <p className="text-gray-600 text-sm">
-            Manage all members and their activities on the platform
-          </p>
-        </div>
-        <div className="flex space-x-6 mr-10">
-          <Button
-            title="Add Member"
-          />
-        </div>
+      <Breadcrumb items={breadcrumbItems} />
+      
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Add Coordinator</h1>
+        <p className="text-gray-600 text-sm">Select members from the platform and assign coordinator roles</p>
       </div>
 
       <div className="space-y-4">
         <SearchBar placeholder="Search members..." />
-        <div className="flex gap-2 mt-10">
-          <FilterButton label="All" />
-          <FilterButton label="Active" />
-          <FilterButton label="Inactive" />
-          <FilterButton label="Pending" />
-          <FilterButton label="Joined" />
-        </div>
-
+        
         <div className="mt-5">
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <table className="min-w-full divide-y divide-gray-200">
@@ -86,13 +91,10 @@ function MemberManagement() {
                     Email
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Joined
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Last Active
+                    Coordinator Role
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
@@ -110,30 +112,30 @@ function MemberManagement() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{member.email}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
-                          member.status
-                        )}`}
-                      >
-                        {member.status}
-                      </span>
-                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {member.joined}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {member.lastActive}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <select
+                        className="text-sm border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={selectedRoles[member.id] || ""}
+                        onChange={(e) => handleRoleChange(member.id, e.target.value)}
+                      >
+                        <option value="">Select Role</option>
+                        {coordinatorRoles.map((role) => (
+                          <option key={role} value={role}>
+                            {role}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button 
-                        className="text-indigo-600 hover:text-indigo-900 mr-4"
-                        onClick={() => navigate("/admin/MemberManagement/MemberProfile")}
+                      <button
+                        className="text-indigo-600 hover:text-indigo-900 disabled:text-gray-400"
+                        onClick={() => handleAssignCoordinator(member.id)}
+                        disabled={!selectedRoles[member.id]}
                       >
-                        View
-                      </button>
-                      <button className="text-red-600 hover:text-red-900">
-                        Delete
+                        Assign
                       </button>
                     </td>
                   </tr>
@@ -147,4 +149,4 @@ function MemberManagement() {
   );
 }
 
-export default MemberManagement;
+export default AddCoordinator;

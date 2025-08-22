@@ -14,6 +14,7 @@ import AddCourse from './pages/admin/AddCourse'
 import AddModule from './pages/admin/AddModule'
 import ExaminationManagement from './pages/admin/ExaminationManagement'
 import CreateQuiz from './pages/admin/CreateQuiz'
+import AddCoordinator from './pages/admin/AddCoordinator'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/admin/MemberManagement/MemberProfile" element={<MemberProfile/>} />
           <Route path="/admin/CoordinatorManagement" element={<CoordinatorManagement/>} />
           <Route path="/admin/CoordinatorManagement/CoordinatorProfile" element={<CoordinatorProfile/>} />
+          <Route path="/admin/CoordinatorManagement/AddCoordinator" element={<AddCoordinator/>} />
           <Route path="/admin/reports" element={<Reports/>} />
           <Route path="/admin/content" element={<Content/>} />
           <Route path="/admin/content/add-course" element={<AddCourse/>} />
