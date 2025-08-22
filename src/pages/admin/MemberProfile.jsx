@@ -22,13 +22,17 @@ function MemberProfile() {
   ];
     return (
         <div className="p-6 w-full">
-            <p className="p-4 font-medium text-xl"><span className="text-[#b8144a]">Members</span> / Member Profile</p>
+            <div className="mb-6">
+                <p className="text-sm text-gray-600 mb-2">
+                    <span className="text-[#b8144a] font-medium">Members</span> / Member Profile
+                </p>
+            </div>
             <ProfileInfo fullName="Olivia Bennett" title="Member since January 15, 2022" id="123456789"/>
-            <p className="font-bold text-xl p-5 ">Overview</p>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 px-5">Overview</h2>
             <hr />
             <PersonalInfo personalInfo={personalInfo}/>
             <div>
-                <h1 className="font-bold text-xl p-5">Activity Summary</h1>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 px-5">Activity Summary</h2>
                <div className="flex justify-start gap-6 p-5">
                  {InfoCardStats.map((stat, index) => (
                     <InfoCard
@@ -40,7 +44,7 @@ function MemberProfile() {
                 ))}
                </div>
             </div>
-            <p className="font-bold text-xl p-5">Recent Activities</p>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 px-5">Recent Activities</h2>
             <Activities activitiesData={activitiesData} />
         </div>
     );

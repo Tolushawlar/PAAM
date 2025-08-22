@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Breadcrumb from '../../components/Breadcrumb';
+import Breadcrumb from '../../Components/Breadcrumb';
 import InputField from '../../UI/InputField';
 import SelectField from '../../UI/SelectField';
 import TextAreaField from '../../UI/TextAreaField';
@@ -54,7 +54,7 @@ export default function AddCourse() {
       
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Course</h1>
-        <p className="text-gray-600">Create a new course for the selected module</p>
+        <p className="text-gray-600 text-sm">Create a new course for the selected module</p>
       </div>
 
       <div className="bg-white rounded-lg p-6 max-w-4xl">
