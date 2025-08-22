@@ -2,8 +2,6 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './Components/Layout'
 import AdminDashboard from './pages/admin/AdminDashboard'
-import UserDashboard from './pages/user/UserDashboard'
-import UserProfile from './pages/user/UserProfile'
 import MemberManagement from './pages/admin/MemberManagement'
 import MemberProfile from './pages/admin/MemberProfile'
 import CoordinatorManagement from './pages/admin/CoordinatorManagement'
@@ -14,6 +12,21 @@ import AddCourse from './pages/admin/AddCourse'
 import AddModule from './pages/admin/AddModule'
 import ExaminationManagement from './pages/admin/ExaminationManagement'
 import CreateQuiz from './pages/admin/CreateQuiz'
+import CoordinatorDashboard from './pages/coordinator/CoordinatorDashboard'
+import CoordinatorMemberManagement from './pages/coordinator/CoordinatorMemberManagement'
+import CoordinatorMeetingManagement from './pages/coordinator/CoordinatorMeetingManagement'
+import CoordinatorLiveStreaming from './pages/coordinator/CoordinatorLiveStreaming'
+import CoordinatorMembersDirectory from './pages/coordinator/CoordinatorMembersDirectory'
+import UserDashboard from './pages/user/UserDashboard'
+import UserProfile from './pages/user/UserProfile'
+import UserDownloadCertificate from './pages/user/UserDownloadCertificate'
+import UserLiveStreaming from './pages/user/UserLiveStreaming'
+import UserMembersDirectory from './pages/user/UserMembersDirectory'
+import UserDonorsHub from './pages/user/UserDonorsHub'
+import UserEvents from './pages/user/UserEvents'
+import UserResources from './pages/user/UserResources'
+
+
 
 function App() {
   return (
@@ -31,8 +44,19 @@ function App() {
           <Route path="/admin/content/add-module" element={<AddModule/>} />
           <Route path="/admin/ExaminationManagement" element={<ExaminationManagement/>} />
           <Route path="/admin/ExaminationManagement/CreateQuiz" element={<CreateQuiz/>} />
+          <Route path="/coordinator" element={<CoordinatorDashboard />} />
+          <Route path="/coordinator/MemberManagement" element={<CoordinatorMemberManagement />} />
+          <Route path="/coordinator/MeetingManagement" element={<CoordinatorMeetingManagement />} />
+          <Route path="/coordinator/LiveStreaming" element={<CoordinatorLiveStreaming />} />
+          <Route path="/coordinator/MembersDirectory" element={<CoordinatorMembersDirectory />} />
           <Route path="/user" element={<UserDashboard />} />
-          <Route path="/user/profile" element={<UserProfile />} />
+          <Route path="/user/Profile" element={<UserProfile />} />
+          <Route path="/user/DownloadCertificate" element={<UserDownloadCertificate />} />
+          <Route path="/user/LiveStreaming" element={<UserLiveStreaming />} />
+          <Route path="/user/MembersDirectory" element={<UserMembersDirectory/>} />
+          <Route path="/user/DonorsHub" element={<UserDonorsHub/>} />
+          <Route path="/user/Events" element={<UserEvents/>} />
+          <Route path="/user/Resources" element={<UserResources/>} />
           <Route path="/" element={<Navigate to="/admin" replace />} />
         </Routes>
       </Layout>

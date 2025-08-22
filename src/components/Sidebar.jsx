@@ -20,11 +20,16 @@ import eventIcon from "../assets/sidebar-icons/event.svg";
 import eventIconB from "../assets/sidebar-icons/event-b.svg";
 import examinationIcon from "../assets/sidebar-icons/examination.svg";
 import examinationIconB from "../assets/sidebar-icons/examination-b.svg";
+import donorsIcon from "../assets/sidebar-icons/donors.svg"
+import donorsIconB from "../assets/sidebar-icons/donors-b.svg"
+import downloadIcon from "../assets/sidebar-icons/download.svg"
+import downloadIconB from "../assets/sidebar-icons/download-b.svg"
 
 const Sidebar = ({ userType, onToggle }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
+  const isCoordinator= location.pathname.startsWith("/coordinator");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleToggle = () => {
@@ -42,17 +47,36 @@ const Sidebar = ({ userType, onToggle }) => {
     { icon: examinationIcon, iconB: examinationIconB, label: "Examination Management", path: "/admin/ExaminationManagement" },
     { icon: eventIcon, iconB: eventIconB, label: "Event Management", path: "/admin/EventManagement" },
   ];
-
-  const userMenuItems = [
-    { icon: dashboardIcon, iconB: dashboardIconB, label: "Dashboard", path: "/user" },
-    { icon: eventIcon, iconB: eventIconB, label: "Events", path: "/user/events" },
-    { icon: contentIcon, iconB: contentIconB, label: "Training", path: "/user/training" },
-    { icon: memberIcon, iconB: memberIconB, label: "Profile", path: "/user/profile" },
-    { icon: examinationIcon, iconB: examinationIconB, label: "Examinations", path: "/user/examinations" },
-    { icon: reportsIcon, iconB: reportsIconB, label: "Reports", path: "/user/reports" },
+  const coordinatorMenuItems = [
+    { icon: dashboardIcon, iconB: dashboardIconB, label: "Home", path: "/coordinator" },
+    { icon: memberIcon, iconB: memberIconB, label: "Member Management", path: "/coordinator/MemberManagement" },
+    { icon: eventIcon, iconB: eventIconB, label: "Meeting Management", path: "/coordinator/MeetingManagement" },
+    { icon: reportsIcon, iconB: reportsIconB, label: "Live Streaming", path: "/coordinator/LiveStreaming" },
+    { icon: coordinatorIcon, iconB: coordinatorIconB, label: "Members Directory", path: "/coordinator/MembersDirectory" },
   ];
 
-  const menuItems = isAdmin ? adminMenuItems : userMenuItems;
+  const userMenuItems = [
+    { icon: dashboardIcon, iconB: dashboardIconB, label: "Home", path: "/user" },
+    { icon: memberIcon, iconB: memberIconB, label: "Profile", path: "/user/Profile" },
+    { icon: examinationIcon, iconB: examinationIconB, label: "Mandate Training", path: "/user/MandateTraining" },
+    { icon: memberIcon, iconB: memberIconB, label: "Leadership Training", path: "/user/LeadershipTraining" },
+    { icon: downloadIcon, iconB: downloadIconB, label: "Download Certificates", path: "/user/DownloadCertificate" },
+    { icon: reportsIcon, iconB: reportsIconB, label: "Live Streaming", path: "/user/LiveStreaming" },
+    { icon: coordinatorIcon, iconB: coordinatorIconB, label: "Members Directory", path: "/user/MembersDirectory" },
+    { icon: donorsIcon, iconB: donorsIconB, label: "Donors Hub", path: "/user/DonorsHub" },
+    { icon: eventIcon, iconB:  eventIconB, label: "Events", path: "/user/Events" },
+    { icon: contentIcon, iconB: contentIconB, label: "Resources & Publications", path: "/user/Resources" },
+  ];
+
+  let menuItems; // Declare with `let` as its value will change
+
+  if (isAdmin) {
+    menuItems = adminMenuItems;
+  } else if (isCoordinator) {
+    menuItems = coordinatorMenuItems;
+  } else {
+    menuItems = userMenuItems; // Default case if neither of the above is true
+  }
 
   return (
     <div className={`flex fixed h-screen flex-col ${isCollapsed ? 'w-16' : 'w-80'} bg-white border-r border-gray-200 transition-all duration-300`}>
@@ -80,18 +104,17 @@ const Sidebar = ({ userType, onToggle }) => {
           </div>
           <div className="flex flex-col gap-2">
             {menuItems.map((item, index) => {
-              const isActive = item.path === '/admin' 
+              const isActive = item.path === '/admin'
                 ? location.pathname === '/admin'
                 : location.pathname === item.path || location.pathname.startsWith(item.path + '/');
               return (
                 <div
                   key={index}
                   onClick={() => navigate(item.path)}
-                  className={`flex items-center ${isCollapsed ? 'justify-center w-[40px]' : 'gap-3'} px-3 py-2 rounded-lg cursor-pointer h-[40px] transition-colors ${
-                    isActive
+                  className={`flex items-center ${isCollapsed ? 'justify-center w-[40px]' : 'gap-3'} px-3 py-2 rounded-lg cursor-pointer h-[40px] transition-colors ${isActive
                       ? "text-black font-bold bg-[#B8144A]/20"
                       : "hover:bg-gray-50 text-gray-900"
-                  }`}
+                    }`}
                   title={isCollapsed ? item.label : ''}
                 >
                   <img

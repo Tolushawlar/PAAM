@@ -23,7 +23,7 @@ export default function UserDashboard() {
             key={index}
             title={stat.title}
             number={stat.number}
-            color="bg-[#b8144a] text-white"
+            color="bg-[#b8144a]/20"
           />
         ))}
       </div>
