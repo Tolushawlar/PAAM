@@ -2,9 +2,14 @@ import PersonalInfo from "../../Components/PersonalInfo";
 import ProfileInfo from "../../Components/ProfileInfo";
 import InfoCard from "../../Components/InfoCard";
 import Activities from "../../Components/Activities";
+import Breadcrumb from "../../components/Breadcrumb";
 
 
 function CoordinatorProfile() {
+    const breadcrumbItems = [
+        { label: 'Coordinator Management', href: '/admin/CoordinatorManagement' },
+        { label: 'Coordinator Profile' }
+    ];
     const personalInfo = [
         { key: "Full Name", value: "Sarah Johnson" },
         { key: "Email", value: "sarah.johnson@email.com" },
@@ -22,12 +27,11 @@ function CoordinatorProfile() {
     ];
     return (
         <div className="p-6 w-full">
-            <p className="p-4 font-medium text-xl"><span className="text-[#b8144a]">Coordinators</span> / Coordinator Profile</p>
+            <Breadcrumb items={breadcrumbItems} />
             <ProfileInfo fullName="Sarah Johnson" title="Coordinator" />
-            <hr />
             <PersonalInfo personalInfo={personalInfo} />
             <div>
-                <h1 className="font-bold text-xl p-5">Roles & Responsibilities</h1>
+                <h1 className="font-semibold text-xl p-5">Roles & Responsibilities</h1>
                 <hr />
                 <ul className="grid grid-cols-2">
                     {responsibilities.map((Info, index) => (
@@ -38,7 +42,7 @@ function CoordinatorProfile() {
                     ))}
                 </ul>
             </div>
-            <p className="font-bold text-xl p-5">Activity History</p>
+            <p className="font-semibold text-xl p-5">Activity History</p>
             <Activities activitiesData={activitiesData} />
         </div>
     );

@@ -47,7 +47,7 @@ function Reports() {
     <div className="p-6">
       <div className="flex flex-col justify-between mb-10">
         <h1 className="font-bold text-3xl pb-5">Reports</h1>
-        <p className="text-gray-500 text-sm">View and manage reports submitted by coordinators</p>
+        <p className="text-gray-500">View and manage reports submitted by coordinators</p>
       </div>
       <div className="space-y-4">
         <SearchBar placeholder="Search reports..." />

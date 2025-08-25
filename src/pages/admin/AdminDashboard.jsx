@@ -35,7 +35,7 @@ export default function AdminDashboard() {
       {/* Header Section */}
       <div className="flex flex-col justify-between mb-10">
         <h1 className="font-bold text-3xl pb-5">Dashboard Overview</h1>
-        <p className="text-gray-500 text-sm">
+        <p className="text-gray-500">
           High-Level Analytics & Management Tools
         </p>
       </div>

@@ -1,7 +1,7 @@
 function PersonalInfo({personalInfo}) {
   return (
       <div>
-          <h1 className="font-bold text-xl p-5">Personal Information</h1>
+          <h1 className="font-semibold text-xl p-5">Personal Information</h1>
           <hr />
           <ul className="grid grid-cols-2">
               {personalInfo.map((Info, index) => (

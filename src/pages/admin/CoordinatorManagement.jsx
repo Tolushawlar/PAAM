@@ -52,7 +52,7 @@ function CoordinatorManagement() {
       <div className="flex justify-between mb-10">
         <div className="flex flex-col justify-between">
           <h1 className="font-bold text-3xl pb-5">Coordinator Management</h1>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500">
             Manage all coordinators and their assignments on the platform
           </p>
         </div>

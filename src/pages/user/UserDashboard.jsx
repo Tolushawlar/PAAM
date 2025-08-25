@@ -1,67 +1,76 @@
 import React from "react";
 import ProgressBar from "../../components/ProgressBar";
 import MeetingCard from "../../components/MeetingCard";
-import InfoCard from "../../Components/InfoCard";
+import meetingImage3 from "../../assets/meetingImage3.svg"
+import meetingImage4 from "../../assets/meetingImage4.svg"
+import meetingImage5 from "../../assets/meetingImage5.svg"
 import Button from "../../UI/Button";
+import meetingImage1 from "../../assets/meetingImage1.svg"
 
 export default function UserDashboard() {
-  const InfoCardStats = [
-    { title: "Courses Taken", number: "150" },
-    { title: "Exam Scores", number: "320" },
-    { title: "Meetings Attended", number: "55" },
-  ];
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">User Dashboard</h1>
+     <div className="p-6 w-full space-y-16">
+      {/* Header Section */}
+      <div className="space-y-4">
+        <h1 className="text-3xl font-bold text-gray-900">User Dashboard</h1>
         <p className="text-gray-600">Welcome back! Sarah.</p>
+        <div className="space-y-4">
+          <Button title="Continue Training" />
+          <div className="flex gap-4">
+            <Button title="Find a CFN" />
+            <Button title="Give" />
+          </div>
+        </div>
       </div>
 
-      <div className="flex justify-start gap-6 p-5">
-        {InfoCardStats.map((stat, index) => (
-          <InfoCard
-            key={index}
-            title={stat.title}
-            number={stat.number}
-            color="bg-[#b8144a]/20"
-          />
-        ))}
-      </div>
-
-      <div className="mt-8">
+      {/* Training Progress */}
+      <div className="space-y-4">
+        <h1 className="text-xl font-semibold">Training Progress</h1>
         <ProgressBar
-          progress={65}
-          title="Training Progress"
+          progress={60}
+          title="Mandate Training"
           subtitle="Complete your certification modules"
         />
       </div>
 
-      <div className="mt-8">
+      {/* Upcoming Meetings */}
+      <div className="space-y-4">
+        <h1 className="text-xl font-semibold">Upcoming Meetings</h1>
         <MeetingCard
           title="CFN Monthly Meeting"
           date="March 15, 2024"
           time="2:00 PM - 3:30 PM"
-          image="https://picsum.photos/64/64"
+          image={meetingImage1}
         />
       </div>
 
-      {/* Quick Access Tools Section */}
-      <div className="container mt-8">
-        <div className="container p-4">
-          <h1 className="text-xl font-semibold text-black mb-6">
-            Quick Access Tools
-          </h1>
-          <div className="flex flex-wrap items-start gap-2 w-[30vw]">
-            <Button
-              title="Continue Training"
-              width="200px"
-              onClick={() => {}}
-            />
-            <Button title="Find a CFN" width="170px" onClick={() => {}} />
-            <Button title="Give" width="150px" onClick={() => {}} />
+      {/* Recommended for You */}
+      <div className="space-y-6">
+        <h1 className="text-xl font-semibold">Recommended for You</h1>
+        <div className="flex justify-start gap-8">
+          {/* Card 1 */}
+          <div className="flex flex-col items-center text-center w-60 space-y-2">
+            <img src={meetingImage3} alt="meetingImage3" />
+            <p className="font-semibold text-gray-800">Worship and Its Impact</p>
+            <p className="text-gray-600">Experience the transformative power of worship</p>
+          </div>
+
+          {/* Card 2 */}
+          <div className="flex flex-col items-center text-center w-60 space-y-2">
+            <img src={meetingImage4} alt="meetingImage4"/>
+            <p className="font-semibold text-gray-800">The Power of Prayer</p>
+            <p className="text-gray-600">Learn effective prayer techniques</p>
+          </div>
+
+          {/* Card 3 */}
+          <div className="flex flex-col items-center text-center w-60 space-y-2">
+            <img src={meetingImage5} alt="meetingImage5"  />
+            <p className="font-semibold text-gray-800">Deep Dive into Scripture</p>
+            <p className="text-gray-600">Unlock the wisdom of the Bible</p>
           </div>
         </div>
       </div>
     </div>
+
   );
 }

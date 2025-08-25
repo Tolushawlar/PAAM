@@ -7,7 +7,8 @@ function MeetingCard({
   info, 
   buttonTitle, 
   image, 
-  imagePosition = "side" 
+  imagePosition = "side" ,
+  onClick
 }) {
   return (    
     <div
@@ -33,7 +34,7 @@ function MeetingCard({
 
         {buttonTitle && (
           <div className="mt-3">
-            <Button title={buttonTitle} />
+            <Button title={buttonTitle} onClick={onClick}/>
           </div>
         )}
       </div>

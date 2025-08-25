@@ -24,7 +24,7 @@ function UserResources() {
 
             {/* Publications Section */}
             <div className="space-y-6">
-                <p className="text-lg font-semibold">Publications</p>
+                <p className="text-xl font-semibold">Publications</p>
                     <MeetingCard
                         title="Annual Report 2023"
                         info="A comprehensive overview of our activities, achievements, and financial performance in the past year."
@@ -45,7 +45,7 @@ function UserResources() {
 
             {/* Training Materials Section*/}
             <div className="space-y-6">
-                <p className="text-lg font-semibold">Training Materials</p>
+                <p className="text-xl font-semibold">Training Materials</p>
                     <MeetingCard
                         title="Community Engagement Guide"
                         info="A practical guide with strategies and best practices for effective community engagement and outreach."
@@ -67,7 +67,7 @@ function UserResources() {
 
             {/* Multimedia Section*/}
            <div className="space-y-6">
-                <p className="text-lg font-semibold">Multimedia</p>
+                <p className="text-xl font-semibold">Multimedia</p>
                     <MeetingCard
                         title="Webinar: Effective Communication Strategies"
                         info="Watch our webinar on mastering communication skills for leadership and community interaction."
@@ -88,7 +88,7 @@ function UserResources() {
             
             {/*Tools & Templates Section*/}
            <div className="space-y-6">
-                <p className="text-lg font-semibold">Tools & Templates</p>
+                <p className="text-xl font-semibold">Tools & Templates</p>
                     <MeetingCard
                         title="Project Planning Template"
                         info="A customizable template to help you plan and manage your community projects effectively."

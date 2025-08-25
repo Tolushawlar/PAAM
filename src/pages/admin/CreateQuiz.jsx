@@ -67,7 +67,7 @@ function CreateQuiz() {
 
             <div className="flex flex-col justify-between">
                 <h1 className="font-bold text-3xl pb-5">Create Quiz</h1>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500">
                     Fill in the details to create a new quiz for your course module.
                 </p>
             </div>
@@ -97,7 +97,7 @@ function CreateQuiz() {
 
             {/* Questions */}
             <div>
-                <h1 className="font-bold text-xl p-5">Questions</h1>
+                <h1 className="font-semibold text-xl p-5">Questions</h1>
 
                 <TextAreaField
                     label="Question"
