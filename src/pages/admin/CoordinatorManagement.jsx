@@ -57,7 +57,7 @@ function CoordinatorManagement() {
           </p>
         </div>
         <div className="flex space-x-6 mr-10">
-          <Button title="Add Coordinator" />
+          <Button title="Add Coordinator" onClick={() => navigate("/admin/CoordinatorManagement/AddCoordinator")} />
         </div>
       </div>
       <div className="space-y-4">

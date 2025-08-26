@@ -72,9 +72,9 @@ export default function AdminDashboard() {
       {/* Quick Access Tools Section */}
       <div className="container mt-8">
         <div className="container p-4">
-          <h1 className="text-xl font-semibold text-black mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">
             Quick Access Tools
-          </h1>
+          </h2>
           <div className="flex flex-wrap items-start gap-2 w-[30vw]">
             <Button title="Add New Coordinator" width="200px" onClick={() => {}} />
             <Button title="Search Member" width="170px" onClick={() => {}} />

@@ -54,10 +54,10 @@ function ExaminationManagement() {
 
     return (
         <div className="p-6">
-            <div className="flex justify-between mb-10">
-                <div className="flex flex-col justify-between">
-                    <h1 className="font-bold text-3xl pb-5">Examination Management</h1>
-                    <p className="text-gray-500">
+            <div className="flex justify-between items-start mb-8">
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Examination Management</h1>
+                    <p className="text-gray-600">
                         Easily create and control courses, quizzes, and exams, with flexible status settings for draft or published
                     </p>
                 </div>
@@ -70,7 +70,7 @@ function ExaminationManagement() {
             </div>
 
             <div className="space-y-4">
-                <SearchBar placeholder="Search members..." />
+                <SearchBar placeholder="Search quizzes..." />
 
                 <div className="mt-5">
                     <div className="bg-white rounded-lg shadow overflow-hidden">

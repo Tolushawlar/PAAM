@@ -4,7 +4,7 @@ import InputField from '../../UI/InputField';
 import SelectField from '../../UI/SelectField';
 import TextAreaField from '../../UI/TextAreaField';
 import Button from '../../UI/Button';
-import Breadcrumb from '../../components/Breadcrumb';
+import Breadcrumb from '../../Components/Breadcrumb';
 
 
 
