@@ -96,7 +96,7 @@ function CoordinatorMemberManagement() {
       <div className="flex justify-between mb-10">
         <div className="flex flex-col">
           <h1 className="font-bold text-3xl pb-3">Member Management</h1>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500">
             Manage CFN center members using the tools below.
           </p>
         </div>

@@ -65,9 +65,9 @@ function CreateQuiz() {
         <div className="p-6 w-full">
             <Breadcrumb items={breadcrumbItems} />
 
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Quiz</h1>
-                <p className="text-gray-600 text-sm">
+            <div className="flex flex-col justify-between">
+                <h1 className="font-bold text-3xl pb-5">Create Quiz</h1>
+                <p className="text-gray-500">
                     Fill in the details to create a new quiz for your course module.
                 </p>
             </div>
@@ -97,7 +97,7 @@ function CreateQuiz() {
 
             {/* Questions */}
             <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 px-4">Questions</h2>
+                <h1 className="font-semibold text-xl p-5">Questions</h1>
 
                 <TextAreaField
                     label="Question"

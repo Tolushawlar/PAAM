@@ -16,7 +16,7 @@ function UserEvents() {
 
             {/* Featured Events Section */}
             <div className="space-y-6">
-                <p className="text-lg font-semibold">Featured Events</p>
+                <p className="text-xl font-semibold">Featured Events</p>
                <div className="flex">
                  <MeetingCard
                     title="Global Tech Summit 2024"
@@ -45,7 +45,7 @@ function UserEvents() {
 
             {/* Upcoming Streams Section*/}
             <div className="space-y-6">
-                <p className="text-lg font-semibold">All Upcoming Events</p>
+                <p className="text-xl font-semibold">All Upcoming Events</p>
                     <MeetingCard
                         method="October 15, 2024"
                         title="Digital Marketing Masterclass"
@@ -71,7 +71,7 @@ function UserEvents() {
 
             {/* Past Streams Section*/}
             <div className="space-y-6">
-                <p className="text-lg font-semibold">Past Events</p>
+                <p className="text-xl font-semibold">Past Events</p>
                  <MeetingCard
                         method="September 20, 2024"
                         title="Innovation in Tech Forum"

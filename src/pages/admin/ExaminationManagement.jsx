@@ -57,7 +57,7 @@ function ExaminationManagement() {
             <div className="flex justify-between items-start mb-8">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Examination Management</h1>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-gray-600">
                         Easily create and control courses, quizzes, and exams, with flexible status settings for draft or published
                     </p>
                 </div>

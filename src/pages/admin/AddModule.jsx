@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Breadcrumb from '../../Components/Breadcrumb';
+import Breadcrumb from '../../components/Breadcrumb';
 import InputField from '../../UI/InputField';
 import SelectField from '../../UI/SelectField';
 import Button from '../../UI/Button';
@@ -35,7 +35,7 @@ export default function AddModule() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-full">
       <Breadcrumb items={breadcrumbItems} />
       
       <div className="mb-8">

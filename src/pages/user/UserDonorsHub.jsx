@@ -20,7 +20,7 @@ function UserDonorsHub() {
 
             {/* Publications Section */}
             <div className="space-y-6">
-                <p className="text-lg font-semibold">Giving Options</p>
+                <p className="text-xl font-semibold">Giving Options</p>
                 <div className="flex justify-start gap-4">
                     <Button title="One-Time Giving" />
                     <Button title="Recurring Giving" />
@@ -30,7 +30,7 @@ function UserDonorsHub() {
 
             {/* Donation Form Section*/}
             <div className="space-y-6">
-                <p className="text-lg font-semibold">Donation Form</p>
+                <p className="text-xl font-semibold">Donation Form</p>
                 <InputField
                     label="Donation Amount"
                     placeholder="Enter  amount"

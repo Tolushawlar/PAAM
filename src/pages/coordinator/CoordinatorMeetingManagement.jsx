@@ -46,7 +46,7 @@ function CoordinatorMeetingManagement() {
 
       {/* Meeting Images + Upcoming Meetings */}
       <div className="space-y-6">
-        <p className="text-lg font-semibold">Upcoming Meetings</p>
+        <p className="text-xl font-semibold">Upcoming Meetings</p>
 
         {/* Meeting cards */}
         <div className="space-y-6">
@@ -72,7 +72,7 @@ function CoordinatorMeetingManagement() {
 
       {/* Attendance Tracking */}
       <div className="space-y-6">
-        <p className="text-lg font-semibold">Attendance Tracking</p>
+        <p className="text-xl font-semibold">Attendance Tracking</p>
         <AttendanceTracking members={members} />
 
         {/* Button aligned right */}
@@ -83,7 +83,7 @@ function CoordinatorMeetingManagement() {
 
       {/* Meeting Report */}
       <div className="space-y-6">
-        <p className="text-lg font-semibold">Meeting Report</p>
+        <p className="text-xl font-semibold">Meeting Report</p>
 
         <div className="space-y-4">
           {meetingReportLabel.map((label, index) => (

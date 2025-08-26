@@ -2,9 +2,14 @@ import PersonalInfo from "../../Components/PersonalInfo";
 import ProfileInfo from "../../Components/ProfileInfo";
 import InfoCard from "../../Components/InfoCard";
 import Activities from "../../Components/Activities";
+import Breadcrumb from "../../components/Breadcrumb";
 
 
 function CoordinatorProfile() {
+    const breadcrumbItems = [
+        { label: 'Coordinator Management', href: '/admin/CoordinatorManagement' },
+        { label: 'Coordinator Profile' }
+    ];
     const personalInfo = [
         { key: "Full Name", value: "Sarah Johnson" },
         { key: "Email", value: "sarah.johnson@email.com" },
@@ -22,16 +27,11 @@ function CoordinatorProfile() {
     ];
     return (
         <div className="p-6 w-full">
-            <div className="mb-6">
-                <p className="text-sm text-gray-600 mb-2">
-                    <span className="text-[#b8144a] font-medium">Coordinators</span> / Coordinator Profile
-                </p>
-            </div>
+            <Breadcrumb items={breadcrumbItems} />
             <ProfileInfo fullName="Sarah Johnson" title="Coordinator" />
-            <hr />
             <PersonalInfo personalInfo={personalInfo} />
             <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 px-5">Roles & Responsibilities</h2>
+                <h1 className="font-semibold text-xl p-5">Roles & Responsibilities</h1>
                 <hr />
                 <ul className="grid grid-cols-2">
                     {responsibilities.map((Info, index) => (
@@ -42,7 +42,7 @@ function CoordinatorProfile() {
                     ))}
                 </ul>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4 px-5">Activity History</h2>
+            <p className="font-semibold text-xl p-5">Activity History</p>
             <Activities activitiesData={activitiesData} />
         </div>
     );

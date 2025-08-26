@@ -33,9 +33,9 @@ export default function AdminDashboard() {
   return (
     <div className="p-6 w-full">
       {/* Header Section */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard Overview</h1>
-        <p className="text-gray-600 text-sm">
+      <div className="flex flex-col justify-between mb-10">
+        <h1 className="font-bold text-3xl pb-5">Dashboard Overview</h1>
+        <p className="text-gray-500">
           High-Level Analytics & Management Tools
         </p>
       </div>

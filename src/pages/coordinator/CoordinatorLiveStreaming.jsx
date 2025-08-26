@@ -24,7 +24,7 @@ function CoordinatorLiveStreaming() {
 
       {/*Current stream Section */}
       <div className="space-y-6">
-        <p className="text-lg font-semibold">Current Live Stream: PAAM Global Leadership Summit</p>
+        <p className="text-xl font-semibold">Current Live Stream: PAAM Global Leadership Summit</p>
         <MeetingCard
           title="Join us for the PAAM Global Leadership Summit, featuring keynote speakers, panel discussions, and interactive workshops. This event is designed to empower leaders and foster collaboration within our community. The stream is currently live, and you can participate in the live chat alongside the video player."
           time="Date and Time: July 26, 2024, 10:00 AM - 4:00 PM (EST)"
@@ -33,7 +33,7 @@ function CoordinatorLiveStreaming() {
 
       {/* Upcoming Streams Section*/}
       <div className="space-y-6">
-        <p className="text-lg font-semibold">Upcoming Streams</p>
+        <p className="text-xl font-semibold">Upcoming Streams</p>
         <div>
           <MeetingCard
             title="Community Town Hall"
@@ -51,7 +51,7 @@ function CoordinatorLiveStreaming() {
 
       {/* Past Streams Section*/}
       <div className="space-y-6">
-        <p className="text-lg font-semibold">Past Streams</p>
+        <p className="text-xl font-semibold">Past Streams</p>
         <div>
           <MeetingCard
             method="Recorded Stream"

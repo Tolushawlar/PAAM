@@ -1,4 +1,4 @@
-import MemberListing from "../../components/MemberListing";
+import MemberListing from "../../components/ListingCard";
 import Pagination from "../../UI/Pagination";
 import Image from "../../assets/profile-picture-sm.svg"
 import SearchBar from "../../UI/SearchBar";
@@ -36,13 +36,13 @@ function CoordinatorMembersDirectory() {
 
       {/* Members List */}
       <div className="space-y-4">
-        <p className="text-lg font-semibold">Member Listings</p>
+        <p className="text-xl font-semibold">Member Listings</p>
         {members.map((member) => (
           <MemberListing
             key={member.id}
-            profilePic={member.pic}
-            fullName={member.name}
-            expertise={member.expertise}
+            image={member.pic}
+            text={member.name}
+            subtext={member.expertise}
           />
         ))}
       </div>

@@ -18,10 +18,10 @@ export default function Content() {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-start mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Content Management</h1>
-          <p className="text-gray-600 text-sm">
+      <div className="flex justify-between mb-10">
+        <div className="flex flex-col justify-between">
+          <h1 className="font-bold text-3xl pb-5">Content Management</h1>
+          <p className="text-gray-500">
             Manage all courses and modules on the platform
           </p>
         </div>
