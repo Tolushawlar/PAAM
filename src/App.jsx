@@ -1,6 +1,10 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import Layout from './Components/Layout'
+import Layout from './components/Layout'
+import LandingPage from './pages/landing/LandingPage'
+import Signup from './pages/landing/Signup'
+import OTP from './pages/landing/OTP' 
+import Login from './pages/landing/Login' 
 import AdminDashboard from './pages/admin/AdminDashboard'
 import MemberManagement from './pages/admin/MemberManagement'
 import MemberProfile from './pages/admin/MemberProfile'
@@ -32,44 +36,49 @@ import UserEvents from './pages/user/UserEvents'
 import UserResources from './pages/user/UserResources'
 import AddCoordinator from './pages/admin/AddCoordinator'
 
+
 function App() {
   return (
     <Router>
-      <Layout>
-        <Routes>
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/MemberManagement" element={<MemberManagement/>} />
-          <Route path="/admin/MemberManagement/MemberProfile" element={<MemberProfile/>} />
-          <Route path="/admin/CoordinatorManagement" element={<CoordinatorManagement/>} />
-          <Route path="/admin/CoordinatorManagement/CoordinatorProfile" element={<CoordinatorProfile/>} />
-          <Route path="/admin/CoordinatorManagement/AddCoordinator" element={<AddCoordinator/>} />
-          <Route path="/admin/reports" element={<Reports/>} />
-          <Route path="/admin/content" element={<Content/>} />
-          <Route path="/admin/content/add-course" element={<AddCourse/>} />
-          <Route path="/admin/content/add-module" element={<AddModule/>} />
-          <Route path="/admin/ExaminationManagement" element={<ExaminationManagement/>} />
-          <Route path="/admin/ExaminationManagement/CreateQuiz" element={<CreateQuiz/>} />
-          <Route path="/coordinator" element={<CoordinatorDashboard />} />
-          <Route path="/coordinator/MemberManagement" element={<CoordinatorMemberManagement />} />
-          <Route path="/coordinator/MeetingManagement" element={<CoordinatorMeetingManagement />} />
-          <Route path="/coordinator/LiveStreaming" element={<CoordinatorLiveStreaming />} />
-          <Route path="/coordinator/MembersDirectory" element={<CoordinatorMembersDirectory />} />
-          <Route path="/user" element={<UserDashboard />} />
-          <Route path="/user/Profile" element={<UserProfile />} />
-          <Route path="/user/MandateTraining" element={<UserMandateTraining />} />
-          <Route path="/user/MandateTraining/CourseModules" element={<UserCourseModules />} />
-          <Route path="/user/MandateTraining/LessonContent" element={<UserLessonContent />} />
-          <Route path="/user/MandateTraining/Quiz" element={<UserQuiz />} />
-          <Route path="/user/MandateTraining/QuizResults" element={<UserQuizResults />} />
-          <Route path="/user/DownloadCertificate" element={<UserDownloadCertificate />} />
-          <Route path="/user/LiveStreaming" element={<UserLiveStreaming />} />
-          <Route path="/user/MembersDirectory" element={<UserMembersDirectory />} />
-          <Route path="/user/DonorsHub" element={<UserDonorsHub />} />
-          <Route path="/user/Events" element={<UserEvents />} />
-          <Route path="/user/Resources" element={<UserResources />} />
-          <Route path="/" element={<Navigate to="/admin" replace />} />
-        </Routes>
-      </Layout>
+      <Routes>
+        {/* Landing page without Layout */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/otp" element={<OTP />} />
+        <Route path="/login" element={<Login />} />
+        
+        {/* Dashboard routes with Layout */}
+        <Route path="/admin" element={<Layout><AdminDashboard /></Layout>} />
+        <Route path="/admin/MemberManagement" element={<Layout><MemberManagement/></Layout>} />
+        <Route path="/admin/MemberManagement/MemberProfile" element={<Layout><MemberProfile/></Layout>} />
+        <Route path="/admin/CoordinatorManagement" element={<Layout><CoordinatorManagement/></Layout>} />
+        <Route path="/admin/CoordinatorManagement/CoordinatorProfile" element={<Layout><CoordinatorProfile/></Layout>} />
+        <Route path="/admin/CoordinatorManagement/AddCoordinator" element={<Layout><AddCoordinator/></Layout>} />
+        <Route path="/admin/reports" element={<Layout><Reports/></Layout>} />
+        <Route path="/admin/content" element={<Layout><Content/></Layout>} />
+        <Route path="/admin/content/add-course" element={<Layout><AddCourse/></Layout>} />
+        <Route path="/admin/content/add-module" element={<Layout><AddModule/></Layout>} />
+        <Route path="/admin/ExaminationManagement" element={<Layout><ExaminationManagement/></Layout>} />
+        <Route path="/admin/ExaminationManagement/CreateQuiz" element={<Layout><CreateQuiz/></Layout>} />
+        <Route path="/coordinator" element={<Layout><CoordinatorDashboard /></Layout>} />
+        <Route path="/coordinator/MemberManagement" element={<Layout><CoordinatorMemberManagement /></Layout>} />
+        <Route path="/coordinator/MeetingManagement" element={<Layout><CoordinatorMeetingManagement /></Layout>} />
+        <Route path="/coordinator/LiveStreaming" element={<Layout><CoordinatorLiveStreaming /></Layout>} />
+        <Route path="/coordinator/MembersDirectory" element={<Layout><CoordinatorMembersDirectory /></Layout>} />
+        <Route path="/user" element={<Layout><UserDashboard /></Layout>} />
+        <Route path="/user/Profile" element={<Layout><UserProfile /></Layout>} />
+        <Route path="/user/MandateTraining" element={<Layout><UserMandateTraining /></Layout>} />
+        <Route path="/user/MandateTraining/CourseModules" element={<Layout><UserCourseModules /></Layout>} />
+        <Route path="/user/MandateTraining/LessonContent" element={<Layout><UserLessonContent /></Layout>} />
+        <Route path="/user/MandateTraining/Quiz" element={<Layout><UserQuiz /></Layout>} />
+        <Route path="/user/MandateTraining/QuizResults" element={<Layout><UserQuizResults /></Layout>} />
+        <Route path="/user/DownloadCertificate" element={<Layout><UserDownloadCertificate /></Layout>} />
+        <Route path="/user/LiveStreaming" element={<Layout><UserLiveStreaming /></Layout>} />
+        <Route path="/user/MembersDirectory" element={<Layout><UserMembersDirectory /></Layout>} />
+        <Route path="/user/DonorsHub" element={<Layout><UserDonorsHub /></Layout>} />
+        <Route path="/user/Events" element={<Layout><UserEvents /></Layout>} />
+        <Route path="/user/Resources" element={<Layout><UserResources /></Layout>} />
+      </Routes>
     </Router>
   )
 }
