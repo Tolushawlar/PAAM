@@ -2,6 +2,10 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import LandingPage from './pages/landing/LandingPage'
+import About from './pages/landing/About'
+import Events from './pages/landing/Events'
+import Blog from './pages/landing/Blog'
+import BlogPost from './pages/landing/BlogPost'
 import Signup from './pages/landing/Signup'
 import OTP from './pages/landing/OTP' 
 import Login from './pages/landing/Login' 
@@ -37,12 +41,17 @@ import UserResources from './pages/user/UserResources'
 import AddCoordinator from './pages/admin/AddCoordinator'
 
 
+
 function App() {
   return (
     <Router>
       <Routes>
         {/* Landing page without Layout */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blogpost" element={<BlogPost />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/otp" element={<OTP />} />
         <Route path="/login" element={<Login />} />

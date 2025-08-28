@@ -14,8 +14,10 @@ import benefits1 from '../../assets/images/benefits1.png'
 import benefits2 from '../../assets/images/benefits2.png'
 import benefits3 from '../../assets/images/benefits3.png'
 import benefits4 from '../../assets/images/benefits4.png'
-import joinbg from '../../assets/images/joinbg.png'
+
 import servebg from '../../assets/images/servebg.png'
+import Hero from '../../components/hero';
+import Join from '../../components/Join';
 
 
 function LandingPage() {
@@ -85,26 +87,12 @@ function LandingPage() {
       <LandingNavbar />
 
       {/* Hero Section */}
-      <section
-        className="h-screen w-full bg-cover bg-center"
-        style={{ backgroundImage: `url(${hero})` }}
-      >
-        <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-          <div className="text-white max-w-xl">
-            <h1 className="text-xl mb-6">
-              WELCOME TO OUR PLATFORM
-            </h1>
-
-            <p className="text-4xl md:text-6xl font-bold mb-6">
-              BECOME A PART OF OUR COMMUNITY
-            </p>
-
-            <div className="flex gap-4">
-              <Button title="Learn More" />
-            </div>
-          </div>
-        </div>
-      </section>
+      <Hero
+        image={hero}
+        text1="WELCOME TO OUR PLATFORM"
+        text2="BECOME A PART OF OUR COMMUNITY"
+        btn="LEARN MORE"
+      />
 
       {/* Features Section */}
       <section id="features" className="py-28 bg-white">
@@ -138,7 +126,7 @@ function LandingPage() {
 
 
       {/* Love and compassion Section */}
-      <section id="about" className="py-24 bg-white">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Top content */}
           <div className="text-center max-w-3xl mx-auto mb-12">
@@ -156,28 +144,10 @@ function LandingPage() {
             <Button title="Learn More" />
           </div>
 
-          {/* Images arrangement */}
-          <div className="flex justify-center items-end gap-6 mb-20 relative">
-            {/* Left image */}
-            <img
-              src={love1}
-              alt=""
-              className="w-40 md:w-48 lg:w-56 -translate-y-40"
-            />
-
-            {/* Middle image*/}
-            <img
-              src={love2}
-              alt=""
-              className="w-56 md:w-72 lg:w-80 translate-y-8 shadow-xl z-0"
-            />
-
-            {/* Right image */}
-            <img
-              src={love3}
-              alt=""
-              className="w-40 md:w-48 lg:w-56 -translate-y-40"
-            />
+          <div className="flex justify-center items-end gap-6 mb-20">
+            <img src={love1} alt="" className="w-40 md:w-48 lg:w-56 -translate-y-40" />
+            <img src={love2} alt="" className="w-56 md:w-72 lg:w-80 translate-y-8 shadow-xl" />
+            <img src={love3} alt="" className="w-40 md:w-48 lg:w-56 -translate-y-40" />
           </div>
 
           {/* Bottom content */}
@@ -196,7 +166,6 @@ function LandingPage() {
           </div>
         </div>
       </section>
-
 
 
       {/* Benefits Section */}
@@ -235,51 +204,7 @@ function LandingPage() {
 
 
       {/* Join Us Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className='text-center'>
-            <p>UPCOMING SERMONS</p>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">JOIN US AND BECOME A PART OF SOMETHING GREAT</h2>
-          </div>
-          <div className="flex flex-col lg:flex-row w-full h-full">
-
-            {/* Text Section */}
-            <div className="bg-[#ff383c]/20 p-8 flex-1 flex flex-col justify-between rounded-l-xl">
-              <div className="space-y-4 text-black">
-                <p className="text-sm font-semibold text-end">20 JULY</p>
-                <p className="font-medium">Upcoming Event</p>
-                <h3 className="text-2xl font-bold">WATCH AND LISTEN TO OUR SERMONS</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-                <p className="flex items-center gap-2">
-                  <span>⏰</span> Friday 23:39 IST Saturday 11:20 ISD
-                </p>
-                <p className="flex items-center gap-2">
-                  <span>📍</span> No 233 Main St. New York, United States
-                </p>
-              </div>
-
-              <div className="mt-6 flex justify-center">
-                <Button title="Learn More" />
-              </div>
-            </div>
-
-            {/* Image Section */}
-            <div className="flex-2 h-full">
-              <img
-                src={joinbg}
-                alt="Join Background"
-                className="w-full h-full object-cover rounded-r-xl"
-              />
-            </div>
-          </div>
-
-          {/* Last button, justified end */}
-          <div className="mt-6 flex justify-end">
-            <Button title="View All Events →" />
-          </div>
-        </div>
-      </section>
-
+      <Join />
 
 
       {/* Serve The World Section */}
@@ -309,28 +234,28 @@ function LandingPage() {
 
       {/* Inspire Section */}
       <section className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div>
-          <p className="font-semibold text-gray-700 text-center">UPCOMING SERMONS</p>
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
-            SHARE, INSPIRE, INNOVATE
-          </h2>
-          <div className="flex flex-col sm:flex-row justify-between gap-5">
-            {sermons.map((item, index) => (
-              <div
-                key={index}
-                className= "bg-[#ff383c]/50 p-6 rounded-xl flex-1"
-              >
-                <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                <p className="mb-4">{item.description}</p>
-                <p className="font-medium">{item.author}</p>
-                <p className="text-gray-600">{item.date}</p>
-              </div>
-            ))}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div>
+            <p className="font-semibold text-gray-700 text-center">UPCOMING SERMONS</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+              SHARE, INSPIRE, INNOVATE
+            </h2>
+            <div className="flex flex-col sm:flex-row justify-between gap-5">
+              {sermons.map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-[#ff383c]/50 p-6 rounded-xl flex-1"
+                >
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="mb-4">{item.description}</p>
+                  <p className="font-medium">{item.author}</p>
+                  <p className="text-gray-600">{item.date}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
 
       {/* Footer */}

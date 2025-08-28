@@ -1,6 +1,8 @@
 import paamLogo from "../assets/paam-logo.svg";
 import Button from "../UI/Button";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 
 function LandingNavbar() {
   const navigate = useNavigate();
@@ -18,19 +20,12 @@ function LandingNavbar() {
 
             {/* Nav links */}
             <nav className="hidden ml-4 md:flex space-x-8 text-white">
-              <a href="#home" className="hover:text-gray-300">
-                Home
-              </a>
-              <a href="#about" className="hover:text-gray-300">
-                About Us
-              </a>
-              <a href="#mission" className="hover:text-gray-300">
-                The Mission
-              </a>
-              <a href="#vision" className="hover:text-gray-300">
-                The Vision
-              </a>
+              <Link to="/" className="hover:text-gray-300">Home</Link>
+              <Link to="/about" className="hover:text-gray-300">About Us</Link>
+              <Link to="/events" className="hover:text-gray-300">Events</Link>
+              <Link to="/blog" className="hover:text-gray-300">Blog</Link>
             </nav>
+
           </div>
 
           {/* Right section (button) */}

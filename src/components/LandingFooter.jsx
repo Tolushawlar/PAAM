@@ -52,6 +52,11 @@ function LandingFooter() {
               Events
             </Link>
           </li>
+          <li>
+            <Link to="/blog" className="hover:text-white">
+              Blog
+            </Link>
+          </li>
         </ul>
       </div>
 
