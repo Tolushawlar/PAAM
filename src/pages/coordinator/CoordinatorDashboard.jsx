@@ -42,9 +42,9 @@ function CoordinatorDashboard() {
   ];
 
   const InfoCardStats = [
-    { title: "Total Members", number: "125" },
-    { title: "Upcoming Events", number: "3" },
-    { title: "Average Attendance", number: "85%" },
+    { title: "Total Members", number: "125", color: "bg-gradient-to-br from-blue-500 to-purple-600 text-white" },
+    { title: "Upcoming Events", number: "3", color: "bg-gradient-to-br from-green-500 to-teal-600 text-white" },
+    { title: "Average Attendance", number: "85%", color: "bg-gradient-to-br from-orange-500 to-red-600 text-white" },
   ];
 
   return (
@@ -65,7 +65,7 @@ function CoordinatorDashboard() {
               key={index}
               title={stat.title}
               number={stat.number}
-              color="bg-[#b8144a]/20"
+              color={stat.color}
             />
           ))}
         </div>

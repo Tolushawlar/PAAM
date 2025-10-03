@@ -1,21 +1,37 @@
+import { useState } from "react";
 import PersonalInfo from "../../Components/PersonalInfo";
 import ProfileInfo from "../../Components/ProfileInfo";
 import Button from "../../UI/Button";
 
 function UserProfile() {
-    const personalInfo = [
+    const [personalInfo, setPersonalInfo] = useState([
         { key: "Full Name", value: "Olivia Bennett" },
         { key: "Email", value: "olivia.bennett@email.com" },
         { key: "Phone Number", value: "(555) 123-4567" },
         { key: "Location", value: "New York, NY" },
-    ]
+    ]);
+    const [successMessage, setSuccessMessage] = useState("");
+
+    const handleSave = (updatedInfo) => {
+        // Simulate API call
+        setTimeout(() => {
+            setPersonalInfo(updatedInfo);
+            setSuccessMessage("Profile updated successfully!");
+            setTimeout(() => setSuccessMessage(""), 3000);
+        }, 500);
+    };
 
     return (
         <div className="p-6 w-full space-y-16">
             <div className="space-y-6">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile Overview</h1>
+                {successMessage && (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                        {successMessage}
+                    </div>
+                )}
                 <ProfileInfo fullName="Olivia Bennett" title="Member since January 15, 2022" id="123456789" />
-                <PersonalInfo personalInfo={personalInfo} />
+                <PersonalInfo personalInfo={personalInfo} onSave={handleSave} />
             </div>
 
             <div>

@@ -1,5 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { ThemeProvider } from './contexts/ThemeContext'
+import './i18n'
 import Layout from './components/Layout'
 import LandingPage from './pages/landing/LandingPage'
 import About from './pages/landing/About'
@@ -12,6 +14,7 @@ import Login from './pages/landing/Login'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import MemberManagement from './pages/admin/MemberManagement'
 import MemberProfile from './pages/admin/MemberProfile'
+import AddMember from './pages/admin/AddMember'
 import CoordinatorManagement from './pages/admin/CoordinatorManagement'
 import CoordinatorProfile from './pages/admin/CoordinatorProfile'
 import Reports from './pages/admin/Reports'
@@ -38,13 +41,26 @@ import UserMembersDirectory from './pages/user/UserMembersDirectory'
 import UserDonorsHub from './pages/user/UserDonorsHub'
 import UserEvents from './pages/user/UserEvents'
 import UserResources from './pages/user/UserResources'
-import AddCoordinator from './pages/admin/AddCoordinator'
+import AssignLeader from './pages/admin/AssignLeader'
+import UserCertificateVerification from './pages/user/CertificateVerification'
+import CoordinatorCertificateVerification from './pages/coordinator/CertificateVerification'
+import AdminCertificateVerification from './pages/admin/CertificateVerification'
+import EventManagement from './pages/admin/EventManagement'
+import UserAIChat from './pages/user/UserAIChat'
+import UserCFNGroupTracker from './pages/user/UserCFNGroupTracker'
+import UserMemberOrientation from './pages/user/UserMemberOrientation'
+import UserLeadershipTraining from './pages/user/UserLeadershipTraining'
+import AdminCFNGroupTracker from './pages/admin/AdminCFNGroupTracker'
+import CoordinatorCFNGroupTracker from './pages/coordinator/CoordinatorCFNGroupTracker'
+import AdminAIChat from './pages/admin/AdminAIChat'
+import CoordinatorAIChat from './pages/coordinator/CoordinatorAIChat'
 
 
 
 function App() {
   return (
-    <Router>
+    <ThemeProvider>
+      <Router>
       <Routes>
         {/* Landing page without Layout */}
         <Route path="/" element={<LandingPage />} />
@@ -59,16 +75,18 @@ function App() {
         {/* Dashboard routes with Layout */}
         <Route path="/admin" element={<Layout><AdminDashboard /></Layout>} />
         <Route path="/admin/MemberManagement" element={<Layout><MemberManagement/></Layout>} />
+        <Route path="/admin/MemberManagement/AddMember" element={<Layout><AddMember/></Layout>} />
         <Route path="/admin/MemberManagement/MemberProfile" element={<Layout><MemberProfile/></Layout>} />
         <Route path="/admin/CoordinatorManagement" element={<Layout><CoordinatorManagement/></Layout>} />
         <Route path="/admin/CoordinatorManagement/CoordinatorProfile" element={<Layout><CoordinatorProfile/></Layout>} />
-        <Route path="/admin/CoordinatorManagement/AddCoordinator" element={<Layout><AddCoordinator/></Layout>} />
+        <Route path="/admin/CoordinatorManagement/CoordinatorProfile/AssignLeader" element={<Layout><AssignLeader/></Layout>} />
         <Route path="/admin/reports" element={<Layout><Reports/></Layout>} />
         <Route path="/admin/content" element={<Layout><Content/></Layout>} />
         <Route path="/admin/content/add-course" element={<Layout><AddCourse/></Layout>} />
         <Route path="/admin/content/add-module" element={<Layout><AddModule/></Layout>} />
         <Route path="/admin/ExaminationManagement" element={<Layout><ExaminationManagement/></Layout>} />
         <Route path="/admin/ExaminationManagement/CreateQuiz" element={<Layout><CreateQuiz/></Layout>} />
+        <Route path="/admin/EventManagement" element={<Layout><EventManagement/></Layout>} />
         <Route path="/coordinator" element={<Layout><CoordinatorDashboard /></Layout>} />
         <Route path="/coordinator/MemberManagement" element={<Layout><CoordinatorMemberManagement /></Layout>} />
         <Route path="/coordinator/MeetingManagement" element={<Layout><CoordinatorMeetingManagement /></Layout>} />
@@ -87,8 +105,20 @@ function App() {
         <Route path="/user/DonorsHub" element={<Layout><UserDonorsHub /></Layout>} />
         <Route path="/user/Events" element={<Layout><UserEvents /></Layout>} />
         <Route path="/user/Resources" element={<Layout><UserResources /></Layout>} />
+        <Route path="/user/CertificateVerification" element={<Layout><UserCertificateVerification /></Layout>} />
+        <Route path="/user/AIChat" element={<Layout><UserAIChat /></Layout>} />
+        <Route path="/user/CFNGroupTracker" element={<Layout><UserCFNGroupTracker /></Layout>} />
+        <Route path="/user/MemberOrientation" element={<Layout><UserMemberOrientation /></Layout>} />
+        <Route path="/user/LeadershipTraining" element={<Layout><UserLeadershipTraining /></Layout>} />
+        <Route path="/coordinator/CertificateVerification" element={<Layout><CoordinatorCertificateVerification /></Layout>} />
+        <Route path="/coordinator/CFNGroupTracker" element={<Layout><CoordinatorCFNGroupTracker /></Layout>} />
+        <Route path="/coordinator/AIChat" element={<Layout><CoordinatorAIChat /></Layout>} />
+        <Route path="/admin/CertificateVerification" element={<Layout><AdminCertificateVerification /></Layout>} />
+        <Route path="/admin/CFNGroupTracker" element={<Layout><AdminCFNGroupTracker /></Layout>} />
+        <Route path="/admin/AIChat" element={<Layout><AdminAIChat /></Layout>} />
       </Routes>
-    </Router>
+      </Router>
+    </ThemeProvider>
   )
 }
 

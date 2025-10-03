@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { MdKeyboardArrowDown, MdAdminPanelSettings, MdPerson } from "react-icons/md";
 import paamLogo from "../assets/paam-logo.svg";
 import profilePic from "../assets/profile-picture-sm.svg";
+import ThemeToggle from "./ThemeToggle";
+import LanguageSelector from "./LanguageSelector";
 
 function Navbar({ username, src }) {
   const [imgSrc, setImgSrc] = useState(src || profilePic);
@@ -27,14 +29,17 @@ function Navbar({ username, src }) {
 
 
   return (
-    <header className="flex fixed w-full justify-between items-center p-4 bg-white shadow-sm border-b z-50">
-      <div className="flex items-center gap-4">
-        <img src={paamLogo} alt="PAAM logo" className="h-8 w-auto" />
-        <h1 className="text-lg font-semibold text-gray-800">
+    <header className="flex fixed w-full justify-between items-center p-3 sm:p-4 bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700 z-50 transition-colors duration-300">
+      <div className="flex items-center gap-2 sm:gap-4">
+        <img src={paamLogo} alt="PAAM logo" className="h-6 sm:h-8 w-auto" />
+        <h1 className="text-sm sm:text-lg font-semibold text-gray-800 dark:text-gray-200 hidden sm:block">
           PAAM Global Digital Hub
         </h1>
+        <h1 className="text-sm font-semibold text-gray-800 dark:text-gray-200 sm:hidden">
+          PAAM
+        </h1>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         {/* <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowRoleDropdown(!showRoleDropdown)}
@@ -78,13 +83,15 @@ function Navbar({ username, src }) {
             </div>
           )}
         </div> */}
+        <LanguageSelector />
+        <ThemeToggle />
         
-        <div className="flex items-center gap-3">
-          <span className="text-[20px] font-medium text-gray-700">{handleName}</span>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-sm sm:text-lg font-medium text-gray-700 dark:text-gray-300 hidden sm:block">{handleName}</span>
           <img
             src={imgSrc}
             alt={`${username}'s profile picture`}
-            className="h-8 w-8 rounded-full object-cover border border-gray-200"
+            className="h-6 w-6 sm:h-8 sm:w-8 rounded-full object-cover border border-gray-200 dark:border-gray-600"
             onError={() => setImgSrc(profilePic)}
           />
         </div>

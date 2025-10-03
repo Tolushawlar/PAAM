@@ -11,8 +11,8 @@ export default function AddModule() {
   });
 
   const breadcrumbItems = [
-    // { label: 'Dashboard', href: '/admin' },
     { label: 'Content Management', href: '/admin/content' },
+    { label: 'Training Type', href: '/admin/content' },
     { label: 'Add New Module' }
   ];
 

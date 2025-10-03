@@ -10,7 +10,7 @@ function UserLessonContent() {
      const navigate = useNavigate();
   const breadcrumbItems = [
     { label: "MandateTraining", href: "/user/MandateTraining" },
-    { label: "Modules 1", href: "/user/MandateTraining/CourseModules" },
+    { label: "Module 1", href: "/user/MandateTraining/CourseModules" },
     { label: "Lesson Title" }
   ];
 

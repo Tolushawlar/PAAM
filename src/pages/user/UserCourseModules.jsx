@@ -19,30 +19,30 @@ function UserCourseModules() {
     const modules = [
         {
             id: 1,
-            title: "Module 1: Foundations of Christian Discipleship",
+            title: "Course 1: Foundations of Christian Discipleship",
             info: "Learn the biblical principles of discipleship, spiritual growth, and practical steps to strengthen your walk with Christ.",
-            buttonTitle: "Start Module",
+            buttonTitle: "Start Course",
             image: streamImage1,
         },
         {
             id: 2,
-            title: "Module 2: Personal Growth & Spiritual Practices",
+            title: "Course 2: Personal Growth & Spiritual Practices",
             info: "Discover the importance of daily devotion, prayer, and other practices that build spiritual maturity and resilience.",
-            buttonTitle: "Continue",
+            buttonTitle: "Start Course",
             image: streamImage2,
         },
         {
             id: 3,
-            title: "Module 3: Digital Literacy Basics",
+            title: "Course 3: Digital Literacy Basics",
             info: "Understand key digital tools and how to apply them effectively for learning, ministry, and personal development.",
-            buttonTitle: "View Details",
+            buttonTitle: "Start Course",
             image: meetingImage1,
         },
         {
             id: 4,
-            title: "Module 4: Community & Leadership Essentials",
+            title: "Course 4: Community & Leadership Essentials",
             info: "Develop leadership qualities, teamwork, and community-building skills grounded in servant leadership principles.",
-            buttonTitle: "Start Module",
+            buttonTitle: "Start Course",
             image: meetingImage2,
         },
     ];
@@ -70,7 +70,7 @@ function UserCourseModules() {
 
             {/* Available Modules Section */}
             <div className="space-y-6">
-                <p className="text-xl font-semibold">Available Modules</p>
+                <p className="text-xl font-semibold">Available Courses</p>
                 {modules.map((module) => (
                     <MeetingCard
                         key={module.id}

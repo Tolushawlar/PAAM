@@ -1,6 +1,6 @@
 import React from "react";
-import InfoCard from "../../Components/InfoCard";
-import MetricCard from "../../Components/MetricCard";
+import InfoCard from "../../components/InfoCard";
+import MetricCard from "../../components/MetricCard";
 import Button from "../../UI/Button";
 
 export default function AdminDashboard() {
@@ -24,67 +24,64 @@ export default function AdminDashboard() {
   ];
 
   const InfoCardStats = [
-    { title: "Total Members", number: "12,345", percent: "+10%" },
-    { title: "Active Members", number: "8,765", percent: "+5%" },
-    { title: "Total Donations", number: "$50,000", percent: "+15%" },
-    { title: "Training", number: "75%", percent: "+8%" },
+    { title: "Total Members", number: "12,345", percent: "+10%", color: "bg-gradient-to-br from-blue-500 to-blue-600 text-white" },
+    { title: "Active Members", number: "8,765", percent: "+5%", color: "bg-gradient-to-br from-green-500 to-green-600 text-white" },
+    { title: "Total Donations", number: "$50,000", percent: "+15%", color: "bg-gradient-to-br from-purple-500 to-purple-600 text-white" },
+    { title: "Training", number: "75%", percent: "+8%", color: "bg-gradient-to-br from-orange-500 to-orange-600 text-white" },
   ];
 
   return (
-    <div className="p-6 w-full">
+    <div className="w-full">
       {/* Header Section */}
-      <div className="flex flex-col justify-between mb-10">
-        <h1 className="font-bold text-3xl pb-5">Dashboard Overview</h1>
-        <p className="text-gray-500">
+      <div className="mb-6 sm:mb-10">
+        <h1 className="font-bold text-xl sm:text-3xl pb-3 sm:pb-5 text-gray-900 dark:text-gray-100">Dashboard Overview</h1>
+        <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">
           High-Level Analytics & Management Tools
         </p>
       </div>
 
       {/* Info Cards Section */}
-      <div className="flex justify-start gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         {InfoCardStats.map((stat, index) => (
           <InfoCard
             key={index}
             title={stat.title}
             number={stat.number}
             percent={stat.percent}
-            color="bg-[#b8144a]/20"
+            color={stat.color}
           />
         ))}
       </div>
 
       {/* Metric Cards Section */}
-      <div className="flex justify-between gap-6 pr-5 mt-8 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {metricData.map((metric, index) => (
-          <div key={index} className="flex-1">
-            <MetricCard
-              title={metric.title}
-              number={metric.number}
-              timeline={metric.timeline}
-              percentage={metric.percentage}
-              graphType={metric.graphType}
-              graphData={metric.graphData}
-            />
-          </div>
+          <MetricCard
+            key={index}
+            title={metric.title}
+            number={metric.number}
+            timeline={metric.timeline}
+            percentage={metric.percentage}
+            graphType={metric.graphType}
+            graphData={metric.graphData}
+          />
         ))}
       </div>
 
       {/* Quick Access Tools Section */}
-      <div className="container mt-8">
-        <div className="container p-4">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">
-            Quick Access Tools
-          </h2>
-          <div className="flex flex-wrap items-start gap-2 w-[30vw]">
-            <Button title="Add New Coordinator" width="200px" onClick={() => {}} />
-            <Button title="Search Member" width="170px" onClick={() => {}} />
-            <Button title="Review Content" width="150px" onClick={() => {}} />
-            <Button title="Manage Coordinators" className="w-auto" onClick={() => {}} />
-            <Button title="Write Examination Report" width="200px" onClick={() => {}} />
-            <Button title="Download Report Summary" width="200px" onClick={() => {}} />
-          </div>
+      {/* <div className="card-base p-4 sm:p-6">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4 sm:mb-6">
+          Quick Access Tools
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <Button title="Add New Coordinator" onClick={() => {}} />
+          <Button title="Search Member" onClick={() => {}} />
+          <Button title="Review Content" onClick={() => {}} />
+          <Button title="Manage Coordinators" onClick={() => {}} />
+          <Button title="Write Examination Report" onClick={() => {}} />
+          <Button title="Download Report Summary" onClick={() => {}} />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

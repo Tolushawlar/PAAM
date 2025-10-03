@@ -13,9 +13,9 @@ function ProfileInfo({fullName,title,id}) {
                 </div>
             </div>
 
-            <div>
+            {/* <div>
                 <Button title="Edit Profile" width="324px"/>
-            </div>
+            </div> */}
         </div>
     );
 }
