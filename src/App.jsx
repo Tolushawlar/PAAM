@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './contexts/ThemeContext'
+import { DataProvider } from './contexts/DataContext'
 import './i18n'
 import Layout from './components/Layout'
 import LandingPage from './pages/landing/LandingPage'
@@ -21,6 +22,8 @@ import Reports from './pages/admin/Reports'
 import Content from './pages/admin/Content'
 import AddCourse from './pages/admin/AddCourse'
 import AddModule from './pages/admin/AddModule'
+import EditModule from './pages/admin/EditModule'
+import EditCourse from './pages/admin/EditCourse'
 import ExaminationManagement from './pages/admin/ExaminationManagement'
 import CreateQuiz from './pages/admin/CreateQuiz'
 import CoordinatorDashboard from './pages/coordinator/CoordinatorDashboard'
@@ -42,6 +45,7 @@ import UserDonorsHub from './pages/user/UserDonorsHub'
 import UserEvents from './pages/user/UserEvents'
 import UserResources from './pages/user/UserResources'
 import AssignLeader from './pages/admin/AssignLeader'
+import AddCoordinator from './pages/admin/AddCoordinator'
 import UserCertificateVerification from './pages/user/CertificateVerification'
 import CoordinatorCertificateVerification from './pages/coordinator/CertificateVerification'
 import AdminCertificateVerification from './pages/admin/CertificateVerification'
@@ -54,13 +58,15 @@ import AdminCFNGroupTracker from './pages/admin/AdminCFNGroupTracker'
 import CoordinatorCFNGroupTracker from './pages/coordinator/CoordinatorCFNGroupTracker'
 import AdminAIChat from './pages/admin/AdminAIChat'
 import CoordinatorAIChat from './pages/coordinator/CoordinatorAIChat'
+import CourseContent from './pages/admin/CourseContent'
 
 
 
 function App() {
   return (
     <ThemeProvider>
-      <Router>
+      <DataProvider>
+        <Router>
       <Routes>
         {/* Landing page without Layout */}
         <Route path="/" element={<LandingPage />} />
@@ -78,12 +84,16 @@ function App() {
         <Route path="/admin/MemberManagement/AddMember" element={<Layout><AddMember/></Layout>} />
         <Route path="/admin/MemberManagement/MemberProfile" element={<Layout><MemberProfile/></Layout>} />
         <Route path="/admin/CoordinatorManagement" element={<Layout><CoordinatorManagement/></Layout>} />
+        <Route path="/admin/CoordinatorManagement/AddCoordinator" element={<Layout><AddCoordinator/></Layout>} />
         <Route path="/admin/CoordinatorManagement/CoordinatorProfile" element={<Layout><CoordinatorProfile/></Layout>} />
         <Route path="/admin/CoordinatorManagement/CoordinatorProfile/AssignLeader" element={<Layout><AssignLeader/></Layout>} />
         <Route path="/admin/reports" element={<Layout><Reports/></Layout>} />
         <Route path="/admin/content" element={<Layout><Content/></Layout>} />
+        <Route path="/admin/content/course-materials" element={<Layout><CourseContent/></Layout>} />
         <Route path="/admin/content/add-course" element={<Layout><AddCourse/></Layout>} />
         <Route path="/admin/content/add-module" element={<Layout><AddModule/></Layout>} />
+        <Route path="/admin/content/edit-module" element={<Layout><EditModule/></Layout>} />
+        <Route path="/admin/content/edit-course" element={<Layout><EditCourse/></Layout>} />
         <Route path="/admin/ExaminationManagement" element={<Layout><ExaminationManagement/></Layout>} />
         <Route path="/admin/ExaminationManagement/CreateQuiz" element={<Layout><CreateQuiz/></Layout>} />
         <Route path="/admin/EventManagement" element={<Layout><EventManagement/></Layout>} />
@@ -116,8 +126,9 @@ function App() {
         <Route path="/admin/CertificateVerification" element={<Layout><AdminCertificateVerification /></Layout>} />
         <Route path="/admin/CFNGroupTracker" element={<Layout><AdminCFNGroupTracker /></Layout>} />
         <Route path="/admin/AIChat" element={<Layout><AdminAIChat /></Layout>} />
-      </Routes>
-      </Router>
+        </Routes>
+        </Router>
+      </DataProvider>
     </ThemeProvider>
   )
 }

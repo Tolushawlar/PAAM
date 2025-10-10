@@ -10,6 +10,11 @@ export default defineConfig({
         target: 'https://paam.learntoria.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/v1': {
+        target: 'https://paamintl.org',
+        changeOrigin: true,
+        secure: true
       }
     }
   }

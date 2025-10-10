@@ -13,16 +13,25 @@ export default function Breadcrumb({ items }) {
                 <span className="mx-2 text-gray-400">/</span>
               )}
 
-              {/* Link if not last + has href */}
-              {!isLast && item.href ? (
-                <a
-                  href={item.href}
-                  className="text-[#B8414A] hover:text-[#9a3a42] text-sm font-medium"
-                >
-                  {item.label}
-                </a>
+              {/* Link if not last + has href or onClick */}
+              {!isLast && (item.href || item.onClick) ? (
+                item.href ? (
+                  <a
+                    href={item.href}
+                    className="text-[#B8414A] hover:text-[#9a3a42] text-sm font-medium"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <button
+                    onClick={item.onClick}
+                    className="text-[#B8414A] hover:text-[#9a3a42] text-sm font-medium bg-transparent border-none cursor-pointer"
+                  >
+                    {item.label}
+                  </button>
+                )
               ) : (
-                // Last item or items without href
+                // Last item or items without href/onClick
                 <span className="text-gray-500 text-sm font-medium">
                   {item.label}
                 </span>

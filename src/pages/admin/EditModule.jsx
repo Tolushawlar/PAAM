@@ -4,47 +4,64 @@ import Breadcrumb from '../../components/Breadcrumb';
 import InputField from '../../UI/InputField';
 import SelectField from '../../UI/SelectField';
 import Button from '../../UI/Button';
-import { useData } from '../../contexts/DataContext';
 
-export default function AddCourse() {
+export default function EditModule() {
   const navigate = useNavigate();
   const location = useLocation();
   const moduleData = location.state?.module;
-  const trainingData = location.state?.training;
 
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    content: '',
-    program_id: trainingData?.id || '',
-    module_id: moduleData?.id || '',
+    title: moduleData?.name || '',
+    description: moduleData?.description || '',
+    video: moduleData?.video || '',
+    program_id: moduleData?.trainingId || '',
+    stage_order: moduleData?.stageOrder || 0,
     status: 1
   });
-  const [modules, setModules] = useState([]);
-  const { trainingPrograms, modulesByProgram, loading, fetchTrainingPrograms, fetchModules } = useData();
+  const [trainingPrograms, setTrainingPrograms] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetchTrainingPrograms();
-    if (trainingData?.id) {
-      loadModules(trainingData.id);
+    if (!moduleData) {
+      navigate('/admin/content');
+      return;
     }
+    fetchTrainingPrograms();
   }, []);
 
-  const loadModules = async (programId) => {
-    const moduleData = await fetchModules(programId);
-    setModules(moduleData.map(item => ({ value: item.id, label: item.name })));
+  const fetchTrainingPrograms = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/v1/admin?endpoint=selectentry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
+        },
+        body: JSON.stringify({
+          table: "training_programs"
+        }),
+      });
+
+      const result = await response.json();
+      if (result.status === "success" && result.data) {
+        setTrainingPrograms(result.data.map(item => ({
+          value: item.id,
+          label: item.title
+        })));
+      }
+    } catch (error) {
+      console.error("Error fetching training programs:", error);
+    } finally {
+      setLoading(false);
+    }
   };
-
-
 
   const breadcrumbItems = [
     { label: 'Content Management', href: '/admin/content' },
-    ...(trainingData ? [{ label: trainingData.name, onClick: () => navigate('/admin/content') }] : []),
-    ...(moduleData ? [{ label: moduleData.name, onClick: () => {
-      navigate('/admin/content', { state: { selectedTraining: trainingData, viewModules: true } });
-    } }] : []),
-    { label: 'Add New Course' }
+    { label: 'Edit Module' }
   ];
 
   const statusOptions = [
@@ -57,18 +74,6 @@ export default function AddCourse() {
       ...prev,
       [field]: e.target.value
     }));
-  };
-
-  const handleProgramChange = (e) => {
-    const programId = e.target.value;
-    setFormData(prev => ({
-      ...prev,
-      program_id: programId,
-      module_id: ''
-    }));
-    if (programId) {
-      loadModules(programId);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -86,13 +91,14 @@ export default function AddCourse() {
           Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
         },
         body: JSON.stringify({
-          table: "training_courses",
+          table: "training_modules",
+          id: moduleData.id,
           program_id: parseInt(formData.program_id),
-          module_id: parseInt(formData.module_id),
           title: formData.title,
           description: formData.description,
-          content: formData.content,
-          status: parseInt(formData.status)
+          video: formData.video,
+          status: parseInt(formData.status),
+          stage_order: parseInt(formData.stage_order)
         }),
       });
 
@@ -100,55 +106,43 @@ export default function AddCourse() {
       console.log('API Response:', result);
       
       if (result.status === "success") {
-        alert('Course created successfully!');
+        alert('Module updated successfully!');
         navigate('/admin/content');
       } else {
-        alert('Error creating course: ' + (result.message || 'Unknown error'));
+        alert('Error updating module: ' + (result.message || 'Unknown error'));
       }
     } catch (error) {
-      console.error("Error creating course:", error);
-      alert('Error creating course. Please try again.');
+      console.error("Error updating module:", error);
+      alert('Error updating module. Please try again.');
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-full">
       <Breadcrumb items={breadcrumbItems} />
       
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Course</h1>
-        <p className="text-gray-600 text-sm">
-          {moduleData ? `Create a new course for ${moduleData.name}` : 'Create a new course for the selected module'}
-        </p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Module</h1>
+        <p className="text-gray-600 text-sm">Update the learning module information</p>
       </div>
 
-      <div className="bg-white rounded-lg p-6 max-w-2xl">
+      <div className="bg-white p-6 max-w-2xl">
         <form onSubmit={handleSubmit} className="space-y-6">
           <SelectField
             label="Training Program"
-            options={trainingPrograms.map(item => ({ value: item.id, label: item.name }))}
+            options={trainingPrograms}
             value={formData.program_id}
-            onChange={handleProgramChange}
+            onChange={handleInputChange('program_id')}
             placeholder="Select training program"
             required
-            disabled={loading.trainingPrograms}
-          />
-
-          <SelectField
-            label="Module"
-            options={modules}
-            value={formData.module_id}
-            onChange={handleInputChange('module_id')}
-            placeholder="Select a module"
-            required
-            disabled={!formData.program_id}
+            disabled={loading}
           />
 
           <InputField
-            label="Course Title"
-            placeholder="Enter course title"
+            label="Module Title"
+            placeholder="Enter module title"
             value={formData.title}
             onChange={handleInputChange('title')}
             required
@@ -158,25 +152,30 @@ export default function AddCourse() {
             <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
             <textarea
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b8144a] focus:border-transparent"
-              rows={3}
-              placeholder="Enter course description"
+              rows={4}
+              placeholder="Enter module description"
               value={formData.description}
               onChange={handleInputChange('description')}
               required
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Content</label>
-            <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b8144a] focus:border-transparent"
-              rows={8}
-              placeholder="Enter course content"
-              value={formData.content}
-              onChange={handleInputChange('content')}
-              required
-            />
-          </div>
+          <InputField
+            label="Video URL"
+            placeholder="Enter video URL"
+            value={formData.video}
+            onChange={handleInputChange('video')}
+            type="url"
+          />
+
+          <InputField
+            label="Stage Order"
+            placeholder="Enter stage order (0 for first)"
+            value={formData.stage_order}
+            onChange={handleInputChange('stage_order')}
+            type="number"
+            min="0"
+          />
 
           <SelectField
             label="Status"
@@ -189,7 +188,7 @@ export default function AddCourse() {
 
           <div className="flex gap-4 pt-4">
             <Button
-              title={submitting ? "Creating..." : "Create Course"}
+              title={submitting ? "Updating..." : "Update Module"}
               type="submit"
               disabled={submitting}
             />

@@ -1,62 +1,75 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import SearchBar from "../../UI/SearchBar";
 import Button from "../../UI/Button";
-import Breadcrumb from "../../Components/Breadcrumb";
+import Breadcrumb from "../../components/Breadcrumb";
 
 function AssignLeader() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { selectedPosition } = location.state || {};
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [coordinators, setCoordinators] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const breadcrumbItems = [
-    { label: 'Coordinator Management', href: '/admin/CoordinatorManagement' },
-    { label: 'Coordinator Profile', href: '/admin/CoordinatorManagement/CoordinatorProfile' },
+    { label: 'Coordinator Management', onClick: () => navigate('/admin/CoordinatorManagement') },
+    { label: 'Coordinator Profile', onClick: () => navigate('/admin/CoordinatorManagement/CoordinatorProfile') },
     { label: 'Assign Leader' }
   ];
 
-  const users = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      joined: "2024-01-15",
-      status: "Active"
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      joined: "2024-01-10",
-      status: "Active"
-    },
-    {
-      id: 3,
-      name: "Mike Johnson",
-      email: "mike@example.com",
-      joined: "2024-01-12",
-      status: "Active"
-    },
-    {
-      id: 4,
-      name: "Sarah Wilson",
-      email: "sarah@example.com",
-      joined: "2024-01-08",
-      status: "Active"
-    },
-    {
-      id: 5,
-      name: "David Brown",
-      email: "david@example.com",
-      joined: "2024-01-20",
-      status: "Active"
-    }
-  ];
+  const positionHierarchy = {
+    'center': [],
+    'area': ['Center Coordinator'],
+    'zonal': ['Area Coordinator'],
+    'local': ['Zonal Coordinator'],
+    'divisional': ['Local Govt Council Coordinator'],
+    'provincial': ['Divisional Coordinator'],
+    'regional': ['Provincial Coordinator'],
+    'national': ['Regional Coordinator']
+  };
 
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    fetchCoordinators();
+  }, []);
+
+  const fetchCoordinators = async () => {
+    try {
+      const response = await fetch("/v1/admin?endpoint=listusers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
+        },
+        body: JSON.stringify({}),
+      });
+
+      const result = await response.json();
+      if (result.status === "success" && result.data) {
+        const coordinatorUsers = result.data.filter(user => user.user_roles === 2);
+        setCoordinators(coordinatorUsers);
+      }
+    } catch (error) {
+      console.error("Error fetching coordinators:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const eligibleRoles = selectedPosition ? positionHierarchy[selectedPosition] : [];
+  
+  const filteredUsers = coordinators.filter(coordinator => {
+    const matchesSearch = !searchTerm || 
+      (coordinator.firstname && coordinator.firstname.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (coordinator.lastname && coordinator.lastname.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (coordinator.email && coordinator.email.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesRole = eligibleRoles.length === 0 || eligibleRoles.includes(coordinator.role_title);
+    
+    return matchesSearch && matchesRole;
+  });
 
   const handleUserSelect = (user) => {
     setSelectedUsers(prev => {
@@ -69,11 +82,45 @@ function AssignLeader() {
     });
   };
 
-  const handleSaveAssignments = () => {
-    if (selectedUsers.length > 0) {
-      console.log("Assigning leaders:", selectedUsers);
-      // Handle save logic here
-      navigate('/admin/CoordinatorManagement/CoordinatorProfile');
+  const handleSaveAssignments = async () => {
+    if (selectedUsers.length === 0) return;
+
+    try {
+      const response = await fetch("/v1/admin?endpoint=updateentry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
+        },
+        body: JSON.stringify({
+          table: "users",
+          id: location.state?.coordinator?.id,
+          team: JSON.stringify(selectedUsers)
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const text = await response.text();
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (e) {
+        throw new Error("Invalid response from server");
+      }
+
+      if (result.status === "success") {
+        alert(`Successfully assigned ${selectedUsers.length} leader(s)`);
+        navigate('/admin/CoordinatorManagement/CoordinatorProfile');
+      } else {
+        alert("Failed to assign leaders");
+      }
+    } catch (error) {
+      console.error("Error assigning leaders:", error);
+      alert("Error assigning leaders");
     }
   };
 
@@ -81,13 +128,29 @@ function AssignLeader() {
     return selectedUsers.find(u => u.id === userId);
   };
 
+  if (loading) {
+    return (
+      <div className="p-6">
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#b8144a]"></div>
+          <span className="ml-3 text-lg text-gray-600">Loading coordinators...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6">
       <Breadcrumb items={breadcrumbItems} />
       
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Assign Leader</h1>
-        <p className="text-gray-600 text-sm">Search and select users to assign as leaders</p>
+        <p className="text-gray-600 text-sm">Select coordinators from lower level to assign as leaders</p>
+        {selectedPosition && eligibleRoles.length > 0 && (
+          <p className="text-blue-600 text-sm mt-2">
+            Showing coordinators with roles: {eligibleRoles.join(', ')}
+          </p>
+        )}
       </div>
 
       <div className="space-y-4">
@@ -155,18 +218,18 @@ function AssignLeader() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {user.name}
+                        {user.firstname && user.lastname ? `${user.firstname} ${user.lastname}` : "N/A"}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{user.email}</div>
+                      <div className="text-sm text-gray-900">{user.email?.replace("mailto:", "") || "N/A"}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {user.joined}
+                      {new Date(user.created_at || user.date_joined || Date.now()).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                        {user.status}
+                        {user.status === 1 ? "Active" : "Inactive"}
                       </span>
                     </td>
                   </tr>

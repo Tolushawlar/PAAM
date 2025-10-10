@@ -4,47 +4,34 @@ import Breadcrumb from '../../components/Breadcrumb';
 import InputField from '../../UI/InputField';
 import SelectField from '../../UI/SelectField';
 import Button from '../../UI/Button';
-import { useData } from '../../contexts/DataContext';
 
-export default function AddCourse() {
+export default function EditCourse() {
   const navigate = useNavigate();
   const location = useLocation();
+  const courseData = location.state?.course;
   const moduleData = location.state?.module;
   const trainingData = location.state?.training;
 
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    content: '',
-    program_id: trainingData?.id || '',
-    module_id: moduleData?.id || '',
-    status: 1
+    title: courseData?.name || '',
+    description: courseData?.description || '',
+    content: courseData?.content || '',
+    program_id: courseData?.programId || trainingData?.id || '',
+    module_id: courseData?.moduleId || moduleData?.id || '',
+    status: courseData?.status || 1
   });
-  const [modules, setModules] = useState([]);
-  const { trainingPrograms, modulesByProgram, loading, fetchTrainingPrograms, fetchModules } = useData();
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetchTrainingPrograms();
-    if (trainingData?.id) {
-      loadModules(trainingData.id);
+    if (!courseData) {
+      navigate('/admin/content');
+      return;
     }
   }, []);
 
-  const loadModules = async (programId) => {
-    const moduleData = await fetchModules(programId);
-    setModules(moduleData.map(item => ({ value: item.id, label: item.name })));
-  };
-
-
-
   const breadcrumbItems = [
     { label: 'Content Management', href: '/admin/content' },
-    ...(trainingData ? [{ label: trainingData.name, onClick: () => navigate('/admin/content') }] : []),
-    ...(moduleData ? [{ label: moduleData.name, onClick: () => {
-      navigate('/admin/content', { state: { selectedTraining: trainingData, viewModules: true } });
-    } }] : []),
-    { label: 'Add New Course' }
+    { label: 'Edit Course' }
   ];
 
   const statusOptions = [
@@ -57,18 +44,6 @@ export default function AddCourse() {
       ...prev,
       [field]: e.target.value
     }));
-  };
-
-  const handleProgramChange = (e) => {
-    const programId = e.target.value;
-    setFormData(prev => ({
-      ...prev,
-      program_id: programId,
-      module_id: ''
-    }));
-    if (programId) {
-      loadModules(programId);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -87,6 +62,7 @@ export default function AddCourse() {
         },
         body: JSON.stringify({
           table: "training_courses",
+          id: courseData.id,
           program_id: parseInt(formData.program_id),
           module_id: parseInt(formData.module_id),
           title: formData.title,
@@ -100,52 +76,30 @@ export default function AddCourse() {
       console.log('API Response:', result);
       
       if (result.status === "success") {
-        alert('Course created successfully!');
+        alert('Course updated successfully!');
         navigate('/admin/content');
       } else {
-        alert('Error creating course: ' + (result.message || 'Unknown error'));
+        alert('Error updating course: ' + (result.message || 'Unknown error'));
       }
     } catch (error) {
-      console.error("Error creating course:", error);
-      alert('Error creating course. Please try again.');
+      console.error("Error updating course:", error);
+      alert('Error updating course. Please try again.');
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-full">
       <Breadcrumb items={breadcrumbItems} />
       
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Course</h1>
-        <p className="text-gray-600 text-sm">
-          {moduleData ? `Create a new course for ${moduleData.name}` : 'Create a new course for the selected module'}
-        </p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Course</h1>
+        <p className="text-gray-600 text-sm">Update the course information</p>
       </div>
 
-      <div className="bg-white rounded-lg p-6 max-w-2xl">
+      <div className="bg-white p-6 max-w-2xl">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <SelectField
-            label="Training Program"
-            options={trainingPrograms.map(item => ({ value: item.id, label: item.name }))}
-            value={formData.program_id}
-            onChange={handleProgramChange}
-            placeholder="Select training program"
-            required
-            disabled={loading.trainingPrograms}
-          />
-
-          <SelectField
-            label="Module"
-            options={modules}
-            value={formData.module_id}
-            onChange={handleInputChange('module_id')}
-            placeholder="Select a module"
-            required
-            disabled={!formData.program_id}
-          />
-
           <InputField
             label="Course Title"
             placeholder="Enter course title"
@@ -189,7 +143,7 @@ export default function AddCourse() {
 
           <div className="flex gap-4 pt-4">
             <Button
-              title={submitting ? "Creating..." : "Create Course"}
+              title={submitting ? "Updating..." : "Update Course"}
               type="submit"
               disabled={submitting}
             />
