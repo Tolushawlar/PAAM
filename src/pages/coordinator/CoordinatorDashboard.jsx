@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InfoCard from "../../Components/InfoCard";
 import MetricCard from "../../Components/MetricCard";
 import Button from "../../UI/Button";
@@ -10,14 +10,44 @@ import "react-calendar/dist/Calendar.css"; // calendar styles
 function CoordinatorDashboard() {
   const navigate = useNavigate();
   const [date, setDate] = useState(new Date());
+  const [memberInfo, setMemberInfo] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const memberInfo = [
-    { id: 1, name: "Lucas Bennett", email: "lucas.bennett@email.com", status: "Active" },
-    { id: 2, name: "Sophia Carter", email: "sophia.carter@email.com", status: "Inactive" },
-    { id: 3, name: "Owen Harper", email: "owen.harper@email.com", status: "Active" },
-    { id: 4, name: "Chloe Foster", email: "chloe.foster@email.com", status: "Active" },
-    { id: 5, name: "Ethan Reed", email: "ethan.reed@email.com", status: "Inactive" },
-  ];
+  useEffect(() => {
+    fetchMembers();
+  }, []);
+
+  const fetchMembers = async () => {
+    try {
+      const response = await fetch("/v1/admin?endpoint=listusers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
+        },
+        body: JSON.stringify({}),
+      });
+
+      const result = await response.json();
+      if (result.status === "success" && result.data) {
+        const members = result.data
+          .filter(user => user.user_roles === 3)
+          .slice(0, 5)
+          .map(user => ({
+            id: user.id,
+            name: `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'N/A',
+            email: user.email?.replace("mailto:", "") || "N/A",
+            status: user.status === 1 ? "Active" : "Inactive"
+          }));
+        setMemberInfo(members);
+      }
+    } catch (error) {
+      console.error("Error fetching members:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -42,9 +72,9 @@ function CoordinatorDashboard() {
   ];
 
   const InfoCardStats = [
-    { title: "Total Members", number: "125", color: "bg-gradient-to-br from-blue-500 to-purple-600 text-white" },
-    { title: "Upcoming Events", number: "3", color: "bg-gradient-to-br from-green-500 to-teal-600 text-white" },
-    { title: "Average Attendance", number: "85%", color: "bg-gradient-to-br from-orange-500 to-red-600 text-white" },
+    { title: "Total Members", number: memberInfo.length.toString(), color: "bg-gradient-to-br from-blue-500 to-purple-600 text-white" },
+    { title: "Active Members", number: memberInfo.filter(m => m.status === "Active").length.toString(), color: "bg-gradient-to-br from-green-500 to-teal-600 text-white" },
+    { title: "Inactive Members", number: memberInfo.filter(m => m.status === "Inactive").length.toString(), color: "bg-gradient-to-br from-orange-500 to-red-600 text-white" },
   ];
 
   return (
@@ -95,7 +125,13 @@ function CoordinatorDashboard() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {memberInfo.map((Info) => (
+              {loading ? (
+                <tr>
+                  <td colSpan="4" className="px-6 py-4 text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#b8144a] mx-auto"></div>
+                  </td>
+                </tr>
+              ) : memberInfo.map((Info) => (
                 <tr key={Info.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{Info.name}</div>

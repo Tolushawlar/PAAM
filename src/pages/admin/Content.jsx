@@ -18,14 +18,31 @@ export default function Content() {
     modulesByProgram, 
     coursesByModule, 
     loading, 
+    isDataLoaded,
     fetchTrainingPrograms, 
     fetchModules, 
     fetchCourses, 
-    refreshData 
+    fetchAllTrainingData,
+    refreshData,
+    getLastFetchTime
   } = useData();
 
   useEffect(() => {
-    fetchTrainingPrograms();
+    // Fetch all training data when Content Management is accessed
+    const initializeData = async () => {
+      if (!isDataLoaded) {
+        console.log('Fetching all training data for Content Management...');
+        await fetchAllTrainingData();
+      } else {
+        console.log('Using cached training data from localStorage');
+        const lastFetch = getLastFetchTime();
+        if (lastFetch) {
+          console.log('Last data fetch:', new Date(lastFetch).toLocaleString());
+        }
+      }
+    };
+
+    initializeData();
 
     // Handle navigation from breadcrumb clicks
     if (navigationState?.selectedTraining && navigationState?.viewModules) {
@@ -42,10 +59,6 @@ export default function Content() {
 
 
   const handleTrainingSelect = async (training) => {
-    if (selectedTraining?.id === training.id) {
-      console.log("Same training already selected, skipping...");
-      return;
-    }
     setSelectedTraining(training);
     setCurrentView('modules');
     const moduleData = await fetchModules(training.id);
@@ -53,10 +66,6 @@ export default function Content() {
   };
 
   const handleModuleSelect = async (module) => {
-    if (selectedModule?.id === module.id) {
-      console.log("Same module already selected, skipping...");
-      return;
-    }
     setSelectedModule(module);
     setCurrentView('courses');
     const courseData = await fetchCourses(module.id);
@@ -71,7 +80,9 @@ export default function Content() {
 
   const handleRefreshModules = async () => {
     if (selectedTraining) {
-      const moduleData = await refreshData('modules', selectedTraining.id);
+      console.log('Refreshing all training data...');
+      await refreshData('all');
+      const moduleData = modulesByProgram[selectedTraining.id] || [];
       setModules(moduleData);
     }
   };
@@ -96,7 +107,8 @@ export default function Content() {
       const result = await response.json();
       if (result.status === "success") {
         alert('Module deleted successfully!');
-        const moduleData = await refreshData('modules', selectedTraining.id);
+        await refreshData('all');
+        const moduleData = modulesByProgram[selectedTraining.id] || [];
         setModules(moduleData);
       } else {
         alert('Error deleting module: ' + (result.message || 'Unknown error'));
@@ -134,7 +146,8 @@ export default function Content() {
       if (result.status === "success") {
         alert('Course deleted successfully!');
         if (selectedModule) {
-          const courseData = await refreshData('courses', selectedModule.id);
+          await refreshData('all');
+          const courseData = coursesByModule[selectedModule.id] || [];
           setCourses(courseData);
         }
       } else {
@@ -267,6 +280,27 @@ export default function Content() {
                 {module.description && (
                   <p className="text-gray-600 dark:text-gray-400 mb-3">{module.description}</p>
                 )}
+                
+                {/* Video Section */}
+                <div className="mb-4">
+                  {module.video ? (
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Module Video:</p>
+                      <video 
+                        controls 
+                        className="w-full h-32 rounded border"
+                        src={module.video}
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                  ) : (
+                    <div className="text-center py-4 bg-gray-100 dark:bg-gray-700 rounded border-2 border-dashed border-gray-300 dark:border-gray-600">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">No video available</p>
+                    </div>
+                  )}
+                </div>
+                
                 <div className="flex gap-2 mt-3">
                   <button
                     onClick={() => handleUpdateModule(module)}

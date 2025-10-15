@@ -12,9 +12,10 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '')
       },
       '/v1': {
-        target: 'https://paamintl.org',
+        target: 'https://v1.paamintl.org',
         changeOrigin: true,
-        secure: true
+        secure: true,
+        rewrite: (path) => path.replace(/^\/v1/, '')
       }
     }
   }

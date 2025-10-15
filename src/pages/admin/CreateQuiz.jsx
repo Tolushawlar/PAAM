@@ -1,31 +1,35 @@
-import { useState } from 'react';
-import Pagination from "../../UI/Pagination";
+import { useState, useEffect } from 'react';
 import InputField from '../../UI/InputField';
 import SelectField from '../../UI/SelectField';
 import TextAreaField from '../../UI/TextAreaField';
 import Button from '../../UI/Button';
-import Breadcrumb from '../../Components/Breadcrumb';
+import Breadcrumb from '../../components/Breadcrumb';
+import { useData } from '../../contexts/DataContext';
 
 
 
 function CreateQuiz() {
+    const { allCourses, allModules, fetchAllTrainingData, createQuiz } = useData();
+    const [submitting, setSubmitting] = useState(false);
 
     const breadcrumbItems = [
-        { label: 'Examination Management', href: '/admin/ExaminationManagemnt' },
+        { label: 'Examination Management', href: '/admin/ExaminationManagement' },
         { label: 'Create Quiz' }
     ];
 
-    // formData extended to handle choices and correctAnswer
     const [formData, setFormData] = useState({
-        title: '',
-        description: '',
-        moduleId: '',
-        choice1: '',
-        choice2: '',
-        choice3: '',
-        choice4: '',
-        correctAnswer: ''
+        question: '',
+        courseId: '',
+        a: '',
+        b: '',
+        c: '',
+        d: '',
+        ca: ''
     });
+
+    useEffect(() => {
+        fetchAllTrainingData();
+    }, []);
 
     const handleInputChange = (field) => (e) => {
         setFormData(prev => ({
@@ -34,32 +38,60 @@ function CreateQuiz() {
         }));
     };
 
-    const moduleOptions = [
-        { value: '1', label: 'Financial Literacy Module' },
-        { value: '2', label: 'Leadership Training Module' },
-        { value: '3', label: 'Community Outreach Module' }
+    const courseOptions = allCourses.map(course => ({
+        value: course.id,
+        label: course.name
+    }));
+
+    const correctAnswerOptions = [
+        { value: 'a', label: 'A' },
+        { value: 'b', label: 'B' },
+        { value: 'c', label: 'C' },
+        { value: 'd', label: 'D' }
     ];
 
-    const questions = [
-        {
-            id: 1,
-            quiz: "What is the capital of France?",
-            options: "Paris, London, Berlin, Rome",
-            correctAnswer: "Paris"
-        },
-        {
-            id: 2,
-            quiz: "Which planet is known as the Red Planet?",
-            options: "Mars, Venus, Jupiter, Saturn",
-            correctAnswer: "Mars"
-        },
-        {
-            id: 3,
-            quiz: "What is the largest ocean on Earth?",
-            options: "Pacific, Atlantic, Indian, Arctic",
-            correctAnswer: "Pacific"
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+
+        try {
+            const selectedCourse = allCourses.find(course => course.id == formData.courseId);
+            const moduleId = selectedCourse?.moduleId;
+
+            const result = await createQuiz({
+                lesson: parseInt(formData.courseId),
+                old_lesson_id: moduleId,
+                question: formData.question,
+                a: formData.a,
+                b: formData.b,
+                c: formData.c,
+                d: formData.d,
+                ca: formData.ca
+            });
+
+            if (result.success) {
+                alert('Quiz created successfully!');
+                setFormData({
+                    question: '',
+                    courseId: '',
+                    a: '',
+                    b: '',
+                    c: '',
+                    d: '',
+                    ca: ''
+                });
+            } else {
+                alert('Error creating quiz: ' + (result.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error creating quiz:', error);
+            alert('Error creating quiz. Please try again.');
+        } finally {
+            setSubmitting(false);
         }
-    ];
+    };
+
+
 
     return (
         <div className="p-6 w-full">
@@ -72,123 +104,93 @@ function CreateQuiz() {
                 </p>
             </div>
 
-            {/* Quiz Title */}
-            <div className="mb-3 p-4">
-                <InputField
-                    label="Quiz Title"
-                    placeholder="Enter quiz title"
-                    value={formData.title}
-                    onChange={handleInputChange('title')}
-                    required
-                />
-            </div>
-
-            {/* Module Selector */}
-            <div className="p-4">
-                <SelectField
-                    label="Associated Module"
-                    options={moduleOptions}
-                    value={formData.moduleId}
-                    onChange={handleInputChange('moduleId')}
-                    placeholder="Select a module"
-                    required
-                />
-            </div>
+            <form onSubmit={handleSubmit}>
+                {/* Course Selector */}
+                <div className="p-4">
+                    <SelectField
+                        label="Associated Course"
+                        options={courseOptions}
+                        value={formData.courseId}
+                        onChange={handleInputChange('courseId')}
+                        placeholder="Select a course"
+                        required
+                    />
+                </div>
 
             {/* Questions */}
             <div>
                 <h1 className="font-semibold text-xl p-5">Questions</h1>
 
-                <TextAreaField
-                    label="Question"
-                    placeholder="Enter the question"
-                    value={formData.description}
-                    onChange={handleInputChange('description')}
-                    rows={4}
-                    required
-                    className='p-4'
-                />
+                <div className="p-4">
+                    <TextAreaField
+                        label="Question"
+                        placeholder="Enter the question"
+                        value={formData.question}
+                        onChange={handleInputChange('question')}
+                        rows={4}
+                        required
+                    />
+                </div>
 
-                {/* Answer Choices Loop */}
-                {Array.from({ length: 4 }, (_, index) => (
-                    <div key={index} className='p-4'> 
-                        <InputField
-                            label={`Answer Choice ${index + 1}`}
-                            placeholder="Enter answer choice"
-                            value={formData[`choice${index + 1}`]}
-                            onChange={handleInputChange(`choice${index + 1}`)}
-                            required
-                        />
-                    </div>
-                ))}
+                {/* Answer Choices */}
+                <div className="p-4">
+                    <InputField
+                        label="Option A"
+                        placeholder="Enter option A"
+                        value={formData.a}
+                        onChange={handleInputChange('a')}
+                        required
+                    />
+                </div>
+                <div className="p-4">
+                    <InputField
+                        label="Option B"
+                        placeholder="Enter option B"
+                        value={formData.b}
+                        onChange={handleInputChange('b')}
+                        required
+                    />
+                </div>
+                <div className="p-4">
+                    <InputField
+                        label="Option C"
+                        placeholder="Enter option C"
+                        value={formData.c}
+                        onChange={handleInputChange('c')}
+                        required
+                    />
+                </div>
+                <div className="p-4">
+                    <InputField
+                        label="Option D"
+                        placeholder="Enter option D"
+                        value={formData.d}
+                        onChange={handleInputChange('d')}
+                        required
+                    />
+                </div>
 
                 {/* Correct Answer */}
-                <InputField
-                    label="Correct Answer"
-                    placeholder="Enter correct answer"
-                    value={formData.correctAnswer}
-                    onChange={handleInputChange('correctAnswer')}
-                    required
-                    className='p-4'
-                />
+                <div className="p-4">
+                    <SelectField
+                        label="Correct Answer"
+                        options={correctAnswerOptions}
+                        value={formData.ca}
+                        onChange={handleInputChange('ca')}
+                        placeholder="Select correct answer"
+                        required
+                    />
+                </div>
 
-                <div className="p-4 flex justify-between">
-                    <Button title="Add Question" />
-                    <Button title="Create Quiz" />
+                <div className="p-4">
+                    <Button
+                        title={submitting ? "Creating Quiz..." : "Create Quiz"}
+                        type="submit"
+                        disabled={submitting}
+                    />
                 </div>
             </div>
-
-            {/* Questions Table */}
-            <div className="mt-5">
-                <div className="bg-white rounded-lg shadow overflow-hidden">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Questions
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Options
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Correct Answer
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {questions.map((question) => (
-                                <tr key={question.id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm font-medium text-gray-900">
-                                            {question.quiz}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">{question.options}</div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">{question.correctAnswer}</div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <button
-                                            className="text-indigo-600 hover:text-indigo-900 mr-4"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button className="text-red-600 hover:text-red-900">
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <Pagination />
-                </div>
-            </div>
+            </form>
         </div>
     );
 }

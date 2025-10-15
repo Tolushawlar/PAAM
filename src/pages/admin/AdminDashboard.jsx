@@ -1,22 +1,63 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import InfoCard from "../../components/InfoCard";
 import MetricCard from "../../components/MetricCard";
 import Button from "../../UI/Button";
 
 export default function AdminDashboard() {
+  const [stats, setStats] = useState({
+    totalMembers: 0,
+    activeMembers: 0,
+    coordinators: 0,
+    trainingPrograms: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDashboardStats();
+  }, []);
+
+  const fetchDashboardStats = async () => {
+    try {
+      const response = await fetch("/v1/admin?endpoint=listusers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
+        },
+        body: JSON.stringify({}),
+      });
+
+      const result = await response.json();
+      if (result.status === "success" && result.data) {
+        const users = result.data;
+        setStats({
+          totalMembers: users.length,
+          activeMembers: users.filter(u => u.status === 1).length,
+          coordinators: users.filter(u => u.user_roles === 2).length,
+          trainingPrograms: 2 // Static for now
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching dashboard stats:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const metricData = [
     {
-      title: "Donation Trends",
-      number: "$45,230",
-      timeline: "Last Month",
+      title: "User Growth",
+      number: stats.totalMembers.toString(),
+      timeline: "Total Users",
       percentage: "+12",
       graphType: "line",
       graphData: [20, 35, 45, 30, 55, 40, 65, 50, 70, 60, 80, 75],
     },
     {
-      title: "Content Engagement",
-      number: "1,234",
-      timeline: "Last Week",
+      title: "Active Engagement",
+      number: stats.activeMembers.toString(),
+      timeline: "Active Users",
       percentage: "+8",
       graphType: "bar",
       graphData: [30, 45, 35, 50, 40, 60, 55, 70, 65, 80, 75, 85],
@@ -24,10 +65,10 @@ export default function AdminDashboard() {
   ];
 
   const InfoCardStats = [
-    { title: "Total Members", number: "12,345", percent: "+10%", color: "bg-gradient-to-br from-blue-500 to-blue-600 text-white" },
-    { title: "Active Members", number: "8,765", percent: "+5%", color: "bg-gradient-to-br from-green-500 to-green-600 text-white" },
-    { title: "Total Donations", number: "$50,000", percent: "+15%", color: "bg-gradient-to-br from-purple-500 to-purple-600 text-white" },
-    { title: "Training", number: "75%", percent: "+8%", color: "bg-gradient-to-br from-orange-500 to-orange-600 text-white" },
+    { title: "Total Members", number: loading ? "..." : stats.totalMembers.toString(), percent: "+10%", color: "bg-gradient-to-br from-blue-500 to-blue-600 text-white" },
+    { title: "Active Members", number: loading ? "..." : stats.activeMembers.toString(), percent: "+5%", color: "bg-gradient-to-br from-green-500 to-green-600 text-white" },
+    { title: "Coordinators", number: loading ? "..." : stats.coordinators.toString(), percent: "+15%", color: "bg-gradient-to-br from-purple-500 to-purple-600 text-white" },
+    { title: "Training Programs", number: loading ? "..." : stats.trainingPrograms.toString(), percent: "+8%", color: "bg-gradient-to-br from-orange-500 to-orange-600 text-white" },
   ];
 
   return (

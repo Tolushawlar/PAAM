@@ -2,6 +2,8 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { DataProvider } from './contexts/DataContext'
+import { AuthProvider } from './contexts/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 import './i18n'
 import Layout from './components/Layout'
 import LandingPage from './pages/landing/LandingPage'
@@ -64,9 +66,10 @@ import CourseContent from './pages/admin/CourseContent'
 
 function App() {
   return (
-    <ThemeProvider>
-      <DataProvider>
-        <Router>
+    <AuthProvider>
+      <ThemeProvider>
+        <DataProvider>
+          <Router>
       <Routes>
         {/* Landing page without Layout */}
         <Route path="/" element={<LandingPage />} />
@@ -79,57 +82,58 @@ function App() {
         <Route path="/login" element={<Login />} />
         
         {/* Dashboard routes with Layout */}
-        <Route path="/admin" element={<Layout><AdminDashboard /></Layout>} />
-        <Route path="/admin/MemberManagement" element={<Layout><MemberManagement/></Layout>} />
-        <Route path="/admin/MemberManagement/AddMember" element={<Layout><AddMember/></Layout>} />
-        <Route path="/admin/MemberManagement/MemberProfile" element={<Layout><MemberProfile/></Layout>} />
-        <Route path="/admin/CoordinatorManagement" element={<Layout><CoordinatorManagement/></Layout>} />
-        <Route path="/admin/CoordinatorManagement/AddCoordinator" element={<Layout><AddCoordinator/></Layout>} />
-        <Route path="/admin/CoordinatorManagement/CoordinatorProfile" element={<Layout><CoordinatorProfile/></Layout>} />
-        <Route path="/admin/CoordinatorManagement/CoordinatorProfile/AssignLeader" element={<Layout><AssignLeader/></Layout>} />
-        <Route path="/admin/reports" element={<Layout><Reports/></Layout>} />
-        <Route path="/admin/content" element={<Layout><Content/></Layout>} />
-        <Route path="/admin/content/course-materials" element={<Layout><CourseContent/></Layout>} />
-        <Route path="/admin/content/add-course" element={<Layout><AddCourse/></Layout>} />
-        <Route path="/admin/content/add-module" element={<Layout><AddModule/></Layout>} />
-        <Route path="/admin/content/edit-module" element={<Layout><EditModule/></Layout>} />
-        <Route path="/admin/content/edit-course" element={<Layout><EditCourse/></Layout>} />
-        <Route path="/admin/ExaminationManagement" element={<Layout><ExaminationManagement/></Layout>} />
-        <Route path="/admin/ExaminationManagement/CreateQuiz" element={<Layout><CreateQuiz/></Layout>} />
-        <Route path="/admin/EventManagement" element={<Layout><EventManagement/></Layout>} />
-        <Route path="/coordinator" element={<Layout><CoordinatorDashboard /></Layout>} />
-        <Route path="/coordinator/MemberManagement" element={<Layout><CoordinatorMemberManagement /></Layout>} />
-        <Route path="/coordinator/MeetingManagement" element={<Layout><CoordinatorMeetingManagement /></Layout>} />
-        <Route path="/coordinator/LiveStreaming" element={<Layout><CoordinatorLiveStreaming /></Layout>} />
-        <Route path="/coordinator/MembersDirectory" element={<Layout><CoordinatorMembersDirectory /></Layout>} />
-        <Route path="/user" element={<Layout><UserDashboard /></Layout>} />
-        <Route path="/user/Profile" element={<Layout><UserProfile /></Layout>} />
-        <Route path="/user/MandateTraining" element={<Layout><UserMandateTraining /></Layout>} />
-        <Route path="/user/MandateTraining/CourseModules" element={<Layout><UserCourseModules /></Layout>} />
-        <Route path="/user/MandateTraining/LessonContent" element={<Layout><UserLessonContent /></Layout>} />
-        <Route path="/user/MandateTraining/Quiz" element={<Layout><UserQuiz /></Layout>} />
-        <Route path="/user/MandateTraining/QuizResults" element={<Layout><UserQuizResults /></Layout>} />
-        <Route path="/user/DownloadCertificate" element={<Layout><UserDownloadCertificate /></Layout>} />
-        <Route path="/user/LiveStreaming" element={<Layout><UserLiveStreaming /></Layout>} />
-        <Route path="/user/MembersDirectory" element={<Layout><UserMembersDirectory /></Layout>} />
-        <Route path="/user/DonorsHub" element={<Layout><UserDonorsHub /></Layout>} />
-        <Route path="/user/Events" element={<Layout><UserEvents /></Layout>} />
-        <Route path="/user/Resources" element={<Layout><UserResources /></Layout>} />
-        <Route path="/user/CertificateVerification" element={<Layout><UserCertificateVerification /></Layout>} />
-        <Route path="/user/AIChat" element={<Layout><UserAIChat /></Layout>} />
-        <Route path="/user/CFNGroupTracker" element={<Layout><UserCFNGroupTracker /></Layout>} />
-        <Route path="/user/MemberOrientation" element={<Layout><UserMemberOrientation /></Layout>} />
-        <Route path="/user/LeadershipTraining" element={<Layout><UserLeadershipTraining /></Layout>} />
-        <Route path="/coordinator/CertificateVerification" element={<Layout><CoordinatorCertificateVerification /></Layout>} />
-        <Route path="/coordinator/CFNGroupTracker" element={<Layout><CoordinatorCFNGroupTracker /></Layout>} />
-        <Route path="/coordinator/AIChat" element={<Layout><CoordinatorAIChat /></Layout>} />
-        <Route path="/admin/CertificateVerification" element={<Layout><AdminCertificateVerification /></Layout>} />
-        <Route path="/admin/CFNGroupTracker" element={<Layout><AdminCFNGroupTracker /></Layout>} />
-        <Route path="/admin/AIChat" element={<Layout><AdminAIChat /></Layout>} />
-        </Routes>
-        </Router>
-      </DataProvider>
-    </ThemeProvider>
+        <Route path="/admin" element={<ProtectedRoute><Layout><AdminDashboard /></Layout></ProtectedRoute>} />
+        <Route path="/admin/MemberManagement" element={<ProtectedRoute><Layout><MemberManagement/></Layout></ProtectedRoute>} />
+        <Route path="/admin/MemberManagement/AddMember" element={<ProtectedRoute><Layout><AddMember/></Layout></ProtectedRoute>} />
+        <Route path="/admin/MemberManagement/MemberProfile" element={<ProtectedRoute><Layout><MemberProfile/></Layout></ProtectedRoute>} />
+        <Route path="/admin/CoordinatorManagement" element={<ProtectedRoute><Layout><CoordinatorManagement/></Layout></ProtectedRoute>} />
+        <Route path="/admin/CoordinatorManagement/AddCoordinator" element={<ProtectedRoute><Layout><AddCoordinator/></Layout></ProtectedRoute>} />
+        <Route path="/admin/CoordinatorManagement/CoordinatorProfile" element={<ProtectedRoute><Layout><CoordinatorProfile/></Layout></ProtectedRoute>} />
+        <Route path="/admin/CoordinatorManagement/CoordinatorProfile/AssignLeader" element={<ProtectedRoute><Layout><AssignLeader/></Layout></ProtectedRoute>} />
+        <Route path="/admin/reports" element={<ProtectedRoute><Layout><Reports/></Layout></ProtectedRoute>} />
+        <Route path="/admin/content" element={<ProtectedRoute><Layout><Content/></Layout></ProtectedRoute>} />
+        <Route path="/admin/content/course-materials" element={<ProtectedRoute><Layout><CourseContent/></Layout></ProtectedRoute>} />
+        <Route path="/admin/content/add-course" element={<ProtectedRoute><Layout><AddCourse/></Layout></ProtectedRoute>} />
+        <Route path="/admin/content/add-module" element={<ProtectedRoute><Layout><AddModule/></Layout></ProtectedRoute>} />
+        <Route path="/admin/content/edit-module" element={<ProtectedRoute><Layout><EditModule/></Layout></ProtectedRoute>} />
+        <Route path="/admin/content/edit-course" element={<ProtectedRoute><Layout><EditCourse/></Layout></ProtectedRoute>} />
+        <Route path="/admin/ExaminationManagement" element={<ProtectedRoute><Layout><ExaminationManagement/></Layout></ProtectedRoute>} />
+        <Route path="/admin/ExaminationManagement/CreateQuiz" element={<ProtectedRoute><Layout><CreateQuiz/></Layout></ProtectedRoute>} />
+        <Route path="/admin/EventManagement" element={<ProtectedRoute><Layout><EventManagement/></Layout></ProtectedRoute>} />
+        <Route path="/coordinator" element={<ProtectedRoute><Layout><CoordinatorDashboard /></Layout></ProtectedRoute>} />
+        <Route path="/coordinator/MemberManagement" element={<ProtectedRoute><Layout><CoordinatorMemberManagement /></Layout></ProtectedRoute>} />
+        <Route path="/coordinator/MeetingManagement" element={<ProtectedRoute><Layout><CoordinatorMeetingManagement /></Layout></ProtectedRoute>} />
+        <Route path="/coordinator/LiveStreaming" element={<ProtectedRoute><Layout><CoordinatorLiveStreaming /></Layout></ProtectedRoute>} />
+        <Route path="/coordinator/MembersDirectory" element={<ProtectedRoute><Layout><CoordinatorMembersDirectory /></Layout></ProtectedRoute>} />
+        <Route path="/user" element={<ProtectedRoute><Layout><UserDashboard /></Layout></ProtectedRoute>} />
+        <Route path="/user/Profile" element={<ProtectedRoute><Layout><UserProfile /></Layout></ProtectedRoute>} />
+        <Route path="/user/MandateTraining" element={<ProtectedRoute><Layout><UserMandateTraining /></Layout></ProtectedRoute>} />
+        <Route path="/user/MandateTraining/CourseModules" element={<ProtectedRoute><Layout><UserCourseModules /></Layout></ProtectedRoute>} />
+        <Route path="/user/MandateTraining/LessonContent" element={<ProtectedRoute><Layout><UserLessonContent /></Layout></ProtectedRoute>} />
+        <Route path="/user/MandateTraining/Quiz" element={<ProtectedRoute><Layout><UserQuiz /></Layout></ProtectedRoute>} />
+        <Route path="/user/MandateTraining/QuizResults" element={<ProtectedRoute><Layout><UserQuizResults /></Layout></ProtectedRoute>} />
+        <Route path="/user/DownloadCertificate" element={<ProtectedRoute><Layout><UserDownloadCertificate /></Layout></ProtectedRoute>} />
+        <Route path="/user/LiveStreaming" element={<ProtectedRoute><Layout><UserLiveStreaming /></Layout></ProtectedRoute>} />
+        <Route path="/user/MembersDirectory" element={<ProtectedRoute><Layout><UserMembersDirectory /></Layout></ProtectedRoute>} />
+        <Route path="/user/DonorsHub" element={<ProtectedRoute><Layout><UserDonorsHub /></Layout></ProtectedRoute>} />
+        <Route path="/user/Events" element={<ProtectedRoute><Layout><UserEvents /></Layout></ProtectedRoute>} />
+        <Route path="/user/Resources" element={<ProtectedRoute><Layout><UserResources /></Layout></ProtectedRoute>} />
+        <Route path="/user/CertificateVerification" element={<ProtectedRoute><Layout><UserCertificateVerification /></Layout></ProtectedRoute>} />
+        <Route path="/user/AIChat" element={<ProtectedRoute><Layout><UserAIChat /></Layout></ProtectedRoute>} />
+        <Route path="/user/CFNGroupTracker" element={<ProtectedRoute><Layout><UserCFNGroupTracker /></Layout></ProtectedRoute>} />
+        <Route path="/user/MemberOrientation" element={<ProtectedRoute><Layout><UserMemberOrientation /></Layout></ProtectedRoute>} />
+        <Route path="/user/LeadershipTraining" element={<ProtectedRoute><Layout><UserLeadershipTraining /></Layout></ProtectedRoute>} />
+        <Route path="/coordinator/CertificateVerification" element={<ProtectedRoute><Layout><CoordinatorCertificateVerification /></Layout></ProtectedRoute>} />
+        <Route path="/coordinator/CFNGroupTracker" element={<ProtectedRoute><Layout><CoordinatorCFNGroupTracker /></Layout></ProtectedRoute>} />
+        <Route path="/coordinator/AIChat" element={<ProtectedRoute><Layout><CoordinatorAIChat /></Layout></ProtectedRoute>} />
+        <Route path="/admin/CertificateVerification" element={<ProtectedRoute><Layout><AdminCertificateVerification /></Layout></ProtectedRoute>} />
+        <Route path="/admin/CFNGroupTracker" element={<ProtectedRoute><Layout><AdminCFNGroupTracker /></Layout></ProtectedRoute>} />
+        <Route path="/admin/AIChat" element={<ProtectedRoute><Layout><AdminAIChat /></Layout></ProtectedRoute>} />
+          </Routes>
+          </Router>
+        </DataProvider>
+      </ThemeProvider>
+    </AuthProvider>
   )
 }
 

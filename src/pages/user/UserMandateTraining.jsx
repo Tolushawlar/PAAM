@@ -1,35 +1,68 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import ListingCard from "../../components/ListingCard";
 import moduleImage from "../../assets/moduleImage.svg";
+import { useData } from "../../contexts/DataContext";
 
 
 
 
 function UserMandateTraining() {
     const navigate = useNavigate();
+    const { trainingPrograms, allModules, loading, fetchTrainingPrograms } = useData();
+    const [organizedPrograms, setOrganizedPrograms] = useState([]);
 
-    const program = [
-        {
-            stage: "Stage 1",
-            modules: [
-                { id: 1, text: "Module 1: Foundations of Christian Discipleship", subtext: "Day 1 – Introduction to Discipleship" },
-                { id: 2, text: "Module 2: Personal Growth & Spiritual Practices", subtext: "Day 2 – Building Daily Devotion" },
-                { id: 3, text: "Module 3: Digital Literacy Basics", subtext: "Day 3 – Essential Online Tools" },
-                { id: 4, text: "Module 4: Community & Leadership Essentials", subtext: "Day 4 – Principles of Servant Leadership" },
-                { id: 5, text: "Module 5: Project Management Foundations", subtext: "Day 5 – Introduction to Collaboration Skills" }
-            ]
-        },
-        {
-            stage: "Stage 2",
-            modules: [
-                { id: 6, text: "Module 6: Event Planning & Coordination", subtext: "Day 6 – Organizing Impactful Events" },
-                { id: 7, text: "Module 7: Financial Stewardship & Resource Management", subtext: "Day 7 – Donations & Fundraising Basics" },
-                { id: 8, text: "Module 8: Creative Media & Engagement", subtext: "Day 8 – Using Media for Outreach" },
-                { id: 9, text: "Module 9: Outreach & Community Projects", subtext: "Day 9 – Designing Outreach Strategies" },
-                { id: 10, text: "Module 10: Capstone Project & Graduation", subtext: "Day 10 – Final Presentation & Certification" }
-            ]
+    useEffect(() => {
+        const loadData = async () => {
+            await fetchTrainingPrograms();
+        };
+        loadData();
+    }, []);
+
+    useEffect(() => {
+        if (trainingPrograms.length > 0 && allModules.length > 0) {
+            // Organize modules by training program and stage
+            const organized = trainingPrograms.map(program => {
+                const programModules = allModules
+                    .filter(module => module.trainingId === program.id)
+                    .sort((a, b) => (a.stageOrder || 0) - (b.stageOrder || 0));
+                
+                // Group modules by stage (assuming stageOrder determines stage)
+                const stages = {};
+                programModules.forEach(module => {
+                    const stageNum = Math.ceil((module.stageOrder || 1) / 5); // 5 modules per stage
+                    const stageName = `Stage ${stageNum}`;
+                    if (!stages[stageName]) {
+                        stages[stageName] = [];
+                    }
+                    stages[stageName].push({
+                        id: module.id,
+                        text: module.name,
+                        subtext: module.description || `Module ${module.id}`,
+                        moduleData: module
+                    });
+                });
+                
+                return {
+                    program,
+                    stages: Object.entries(stages).map(([stageName, modules]) => ({
+                        stage: stageName,
+                        modules
+                    }))
+                };
+            });
+            setOrganizedPrograms(organized);
         }
-    ];
+    }, [trainingPrograms, allModules]);
+
+    if (loading.allTrainingData) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#b8144a]"></div>
+                <span className="ml-3 text-lg text-gray-600">Loading training programs...</span>
+            </div>
+        );
+    }
 
     return (
         <div className="p-6 w-full space-y-12">
@@ -44,21 +77,37 @@ function UserMandateTraining() {
                 </p>
             </div>
 
-            {/* Loop through stages */}
-            {program.map((stage) => (
-                <div key={stage.stage} className="space-y-4">
-                    <p className="text-xl font-semibold">{stage.stage}</p>
-                    {stage.modules.map((module) => (
-                        <ListingCard
-                            key={module.id}
-                            image={moduleImage}
-                            text={module.text}
-                            subtext={module.subtext}
-                            onClick={() => navigate("/user/MandateTraining/CourseModules")}
-                        />
-                    ))}
+            {/* Loop through programs and stages */}
+            {organizedPrograms.length === 0 ? (
+                <div className="text-center py-12">
+                    <p className="text-gray-500 text-lg">No training programs available</p>
                 </div>
-            ))}
+            ) : (
+                organizedPrograms.map((programData) => (
+                    <div key={programData.program.id} className="space-y-8">
+                        <h2 className="text-2xl font-bold text-gray-800">{programData.program.name}</h2>
+                        {programData.stages.map((stage) => (
+                            <div key={stage.stage} className="space-y-4">
+                                <p className="text-xl font-semibold">{stage.stage}</p>
+                                {stage.modules.map((module) => (
+                                    <ListingCard
+                                        key={module.id}
+                                        image={moduleImage}
+                                        text={module.text}
+                                        subtext={module.subtext}
+                                        onClick={() => navigate("/user/MandateTraining/CourseModules", {
+                                            state: { 
+                                                module: module.moduleData,
+                                                program: programData.program 
+                                            }
+                                        })}
+                                    />
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                ))
+            )}
         </div>
     );
 }

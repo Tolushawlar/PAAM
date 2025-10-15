@@ -1,56 +1,35 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import SearchBar from "../../UI/SearchBar";
 import Button from "../../UI/Button";
 import Pagination from "../../UI/Pagination";
+import { useData } from "../../contexts/DataContext";
 
 function ExaminationManagement() {
-
     const navigate = useNavigate();
+    const { allQuizzes, allCourses, fetchAllTrainingData } = useData();
+    const [loading, setLoading] = useState(false);
 
-    const quizzes = [
-        {
-            id: 1,
-            title: "Quiz 1: Introduction to PAAM",
-            course: "Course 1: Getting Started",
-            status: "Published"
-        },
-        {
-            id: 2,
-            title: "Quiz 2: Advanced Features",
-            course: "Course 2: Advanced Techniques",
-            status: "Draft"
-        },
-        {
-            id: 3,
-            title: "Quiz 3: Best Practices",
-            course: "Course 3: Best Practices",
-            status: "Published"
-        },
-        {
-            id: 4,
-            title: "Quiz 4: Troubleshooting",
-            course: "Course 4: Troubleshooting",
-            status: "Published"
-        },
-        {
-            id: 5,
-            title: "Quiz 5: Final Assessment",
-            course: "Course 5: Final Assessment",
-            status: "Draft"
-        },
+    useEffect(() => {
+        loadQuizData();
+    }, []);
 
-    ];
-
-    const getStatusColor = (status) => {
-        switch (status) {
-            case "Published":
-                return "bg-green-100 text-green-800";
-            case "Draft":
-                return "bg-red-100 text-red-800";
-            default:
-                return "bg-gray-100 text-gray-800";
-        }
+    const loadQuizData = async () => {
+        setLoading(true);
+        await fetchAllTrainingData();
+        setLoading(false);
     };
+
+    const handleRefresh = () => {
+        loadQuizData();
+    };
+
+    const getCourseName = (courseId) => {
+        const course = allCourses.find(c => c.id === courseId);
+        return course ? course.name : 'Unknown Course';
+    };
+
+
 
     return (
         <div className="p-6">
@@ -61,7 +40,13 @@ function ExaminationManagement() {
                         Easily create and control courses, quizzes, and exams, with flexible status settings for draft or published
                     </p>
                 </div>
-                <div className="flex space-x-6 mr-10">
+                <div className="flex space-x-4 mr-10">
+                    <Button
+                        title="Refresh"
+                        onClick={handleRefresh}
+                        disabled={loading}
+                        backgroundColor="#6B7280"
+                    />
                     <Button
                         title="New Quiz"
                         onClick={() => navigate("/admin/ExaminationManagement/CreateQuiz")}
@@ -71,6 +56,12 @@ function ExaminationManagement() {
 
             <div className="space-y-4">
                 <SearchBar placeholder="Search quizzes..." />
+
+                {loading && (
+                    <div className="text-center py-4">
+                        <div className="text-gray-600">Loading quizzes...</div>
+                    </div>
+                )}
 
                 <div className="mt-5">
                     <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -92,38 +83,42 @@ function ExaminationManagement() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {quizzes.map((quiz) => (
-                                    <tr key={quiz.id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-medium text-gray-900">
-                                                {quiz.title}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{quiz.course}</div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
-                                                    quiz.status
-                                                )}`}
-                                            >
-                                                {quiz.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <button
-                                                className="text-indigo-600 hover:text-indigo-900 mr-4"
-                                                onClick={() => navigate("/admin/ExaminationManagement/CreateQuiz")}
-                                            >
-                                                Edit
-                                            </button>
-                                            <button className="text-red-600 hover:text-red-900">
-                                                Delete
-                                            </button>
+                                {allQuizzes.length === 0 && !loading ? (
+                                    <tr>
+                                        <td colSpan="4" className="px-6 py-8 text-center text-gray-500">
+                                            No quizzes found. Create your first quiz!
                                         </td>
                                     </tr>
-                                ))}
+                                ) : (
+                                    allQuizzes.map((quiz) => (
+                                        <tr key={quiz.id} className="hover:bg-gray-50">
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm font-medium text-gray-900">
+                                                    {quiz.question.substring(0, 50)}...
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm text-gray-900">{getCourseName(quiz.lesson)}</div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Active
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <button
+                                                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                                                    onClick={() => navigate("/admin/ExaminationManagement/CreateQuiz", { state: { quiz } })}
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button className="text-red-600 hover:text-red-900">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
                             </tbody>
                         </table>
                         <Pagination />

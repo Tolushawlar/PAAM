@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import { MdKeyboardArrowDown, MdAdminPanelSettings, MdPerson } from "react-icons/md";
 import paamLogo from "../assets/paam-logo.svg";
 import profilePic from "../assets/profile-picture-sm.svg";
@@ -13,6 +14,7 @@ function Navbar({ username, src }) {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout } = useAuth();
   const isAdmin = location.pathname.startsWith('/admin');
   const handleName = username || "Sarah Miller"
   
@@ -85,6 +87,16 @@ function Navbar({ username, src }) {
         </div> */}
         <LanguageSelector />
         <ThemeToggle />
+        
+        <button
+          onClick={() => {
+            logout();
+            navigate('/login');
+          }}
+          className="px-3 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-200"
+        >
+          Logout
+        </button>
         
         <div className="flex items-center gap-2 sm:gap-3">
           <span className="text-sm sm:text-lg font-medium text-gray-700 dark:text-gray-300 hidden sm:block">{handleName}</span>

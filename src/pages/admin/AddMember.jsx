@@ -54,7 +54,7 @@ export default function AddMember() {
     setError('');
 
     try {
-      const response = await fetch('https://paamintl.org/v1/admin?endpoint=adduser', {
+      const response = await fetch('/v1/admin?endpoint=adduser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

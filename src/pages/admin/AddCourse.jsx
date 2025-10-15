@@ -78,7 +78,10 @@ export default function AddCourse() {
     setSubmitting(true);
     
     try {
-      const response = await fetch("/v1/admin?endpoint=updateentry", {
+      // CREATE COURSE: Use addentry endpoint
+      // UPDATE COURSE: Use updateentry endpoint with course ID
+      // CREATE operation - adding new course
+      const response = await fetch("/v1/admin?endpoint=addentry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,12 +90,14 @@ export default function AddCourse() {
         },
         body: JSON.stringify({
           table: "training_courses",
-          program_id: parseInt(formData.program_id),
-          module_id: parseInt(formData.module_id),
-          title: formData.title,
-          description: formData.description,
-          content: formData.content,
-          status: parseInt(formData.status)
+          data: {
+            program_id: parseInt(formData.program_id),
+            module_id: parseInt(formData.module_id),
+            title: formData.title,
+            description: formData.description,
+            content: formData.content,
+            status: parseInt(formData.status)
+          }
         }),
       });
 

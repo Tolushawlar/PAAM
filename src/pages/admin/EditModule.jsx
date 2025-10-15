@@ -4,6 +4,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import InputField from '../../UI/InputField';
 import SelectField from '../../UI/SelectField';
 import Button from '../../UI/Button';
+import { useData } from '../../contexts/DataContext';
 
 export default function EditModule() {
   const navigate = useNavigate();
@@ -18,9 +19,9 @@ export default function EditModule() {
     stage_order: moduleData?.stageOrder || 0,
     status: 1
   });
-  const [trainingPrograms, setTrainingPrograms] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { trainingPrograms, loading, fetchTrainingPrograms } = useData();
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (!moduleData) {
@@ -29,35 +30,6 @@ export default function EditModule() {
     }
     fetchTrainingPrograms();
   }, []);
-
-  const fetchTrainingPrograms = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("/v1/admin?endpoint=selectentry", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
-        },
-        body: JSON.stringify({
-          table: "training_programs"
-        }),
-      });
-
-      const result = await response.json();
-      if (result.status === "success" && result.data) {
-        setTrainingPrograms(result.data.map(item => ({
-          value: item.id,
-          label: item.title
-        })));
-      }
-    } catch (error) {
-      console.error("Error fetching training programs:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const breadcrumbItems = [
     { label: 'Content Management', href: '/admin/content' },
@@ -74,6 +46,41 @@ export default function EditModule() {
       ...prev,
       [field]: e.target.value
     }));
+  };
+
+  const handleVideoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', file);
+      formDataUpload.append('moduleid', moduleData.id);
+
+      const response = await fetch('/v1/uploadfile', {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer fsdgsdfsdfgv4vwewetvwev',
+        },
+        body: formDataUpload,
+      });
+
+      const result = await response.json();
+      if (result.status === 'success') {
+        setFormData(prev => ({
+          ...prev,
+          video: result.path
+        }));
+      } else {
+        alert('Error uploading video: ' + (result.message || 'Unknown error'));
+      }
+    } catch (error) {
+      console.error('Error uploading video:', error);
+      alert('Error uploading video. Please try again.');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -132,12 +139,12 @@ export default function EditModule() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <SelectField
             label="Training Program"
-            options={trainingPrograms}
+            options={trainingPrograms.map(item => ({ value: item.id, label: item.name }))}
             value={formData.program_id}
             onChange={handleInputChange('program_id')}
             placeholder="Select training program"
             required
-            disabled={loading}
+            disabled={loading.trainingPrograms}
           />
 
           <InputField
@@ -160,13 +167,29 @@ export default function EditModule() {
             />
           </div>
 
-          <InputField
-            label="Video URL"
-            placeholder="Enter video URL"
-            value={formData.video}
-            onChange={handleInputChange('video')}
-            type="url"
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Video</label>
+            <div className="space-y-3">
+              <input
+                type="file"
+                accept="video/*"
+                onChange={handleVideoUpload}
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#b8144a] file:text-white hover:file:bg-[#9a3a42]"
+                disabled={uploading}
+              />
+              {uploading && (
+                <div className="flex items-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#b8144a]"></div>
+                  <span className="text-sm text-gray-600">Uploading video...</span>
+                </div>
+              )}
+              {formData.video && (
+                <div className="text-sm text-green-600">
+                  Video uploaded: {formData.video}
+                </div>
+              )}
+            </div>
+          </div>
 
           <InputField
             label="Stage Order"

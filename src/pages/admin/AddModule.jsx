@@ -20,6 +20,7 @@ export default function AddModule() {
   });
   const { trainingPrograms, loading, fetchTrainingPrograms } = useData();
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchTrainingPrograms();
@@ -43,6 +44,41 @@ export default function AddModule() {
       ...prev,
       [field]: e.target.value
     }));
+  };
+
+  const handleVideoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append('video', file);
+      formDataUpload.append('moduleid', 999); // Temporary ID for new modules
+
+      const response = await fetch('/v1/uploadfile', {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer fsdgsdfsdfgv4vwewetvwev',
+        },
+        body: formDataUpload,
+      });
+
+      const result = await response.json();
+      if (result.status === 'success') {
+        setFormData(prev => ({
+          ...prev,
+          video: result.path
+        }));
+      } else {
+        alert('Error uploading video: ' + (result.message || 'Unknown error'));
+      }
+    } catch (error) {
+      console.error('Error uploading video:', error);
+      alert('Error uploading video. Please try again.');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -128,13 +164,29 @@ export default function AddModule() {
             />
           </div>
 
-          <InputField
-            label="Video URL"
-            placeholder="Enter video URL"
-            value={formData.video}
-            onChange={handleInputChange('video')}
-            type="url"
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Video</label>
+            <div className="space-y-3">
+              <input
+                type="file"
+                accept="video/*"
+                onChange={handleVideoUpload}
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#b8144a] file:text-white hover:file:bg-[#9a3a42]"
+                disabled={uploading}
+              />
+              {uploading && (
+                <div className="flex items-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#b8144a]"></div>
+                  <span className="text-sm text-gray-600">Uploading video...</span>
+                </div>
+              )}
+              {formData.video && (
+                <div className="text-sm text-green-600">
+                  Video uploaded: {formData.video}
+                </div>
+              )}
+            </div>
+          </div>
 
           <InputField
             label="Stage Order"
