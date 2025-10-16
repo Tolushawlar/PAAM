@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import ProgressBar from "../../components/ProgressBar";
 import MeetingCard from "../../components/MeetingCard";
+import TrainingDashboard from "../../components/TrainingDashboard";
 import meetingImage3 from "../../assets/meetingImage3.svg"
 import meetingImage4 from "../../assets/meetingImage4.svg"
 import meetingImage5 from "../../assets/meetingImage5.svg"
@@ -98,6 +99,9 @@ export default function UserDashboard() {
           </div>
         )}
       </div>
+
+      {/* Training Programs Dashboard */}
+      <TrainingDashboard />
 
       {/* Upcoming Meetings */}
       <div className="space-y-4">

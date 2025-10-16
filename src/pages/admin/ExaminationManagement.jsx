@@ -9,6 +9,7 @@ function ExaminationManagement() {
     const navigate = useNavigate();
     const { allQuizzes, allCourses, fetchAllTrainingData } = useData();
     const [loading, setLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         loadQuizData();
@@ -55,7 +56,11 @@ function ExaminationManagement() {
             </div>
 
             <div className="space-y-4">
-                <SearchBar placeholder="Search quizzes..." />
+                <SearchBar 
+                    placeholder="Search quizzes by title or course..." 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
 
                 {loading && (
                     <div className="text-center py-4">
@@ -83,14 +88,24 @@ function ExaminationManagement() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {allQuizzes.length === 0 && !loading ? (
+                                {allQuizzes.filter(quiz => {
+                                    const quizTitle = quiz.question.toLowerCase();
+                                    const courseName = getCourseName(quiz.lesson).toLowerCase();
+                                    const search = searchTerm.toLowerCase();
+                                    return !searchTerm || quizTitle.includes(search) || courseName.includes(search);
+                                }).length === 0 && !loading ? (
                                     <tr>
                                         <td colSpan="4" className="px-6 py-8 text-center text-gray-500">
-                                            No quizzes found. Create your first quiz!
+                                            {searchTerm ? 'No quizzes match your search.' : 'No quizzes found. Create your first quiz!'}
                                         </td>
                                     </tr>
                                 ) : (
-                                    allQuizzes.map((quiz) => (
+                                    allQuizzes.filter(quiz => {
+                                        const quizTitle = quiz.question.toLowerCase();
+                                        const courseName = getCourseName(quiz.lesson).toLowerCase();
+                                        const search = searchTerm.toLowerCase();
+                                        return !searchTerm || quizTitle.includes(search) || courseName.includes(search);
+                                    }).map((quiz) => (
                                         <tr key={quiz.id} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="text-sm font-medium text-gray-900">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FiSearch, FiMapPin, FiClock, FiPhone, FiUsers, FiInfo } from 'react-icons/fi';
 import Button from '../../UI/Button';
@@ -6,9 +6,37 @@ import Button from '../../UI/Button';
 const UserCFNGroupTracker = () => {
   const { t } = useTranslation();
   const [searchAddress, setSearchAddress] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    fetchAllGroups();
+  }, []);
+
+  const fetchAllGroups = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/v1/admin?endpoint=selectentry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
+        },
+        body: JSON.stringify({ table: "cfn_groups" }),
+      });
+
+      const result = await response.json();
+      if (result.status === "success" && result.data) {
+        setGroups(result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching CFN groups:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Mock CFN groups data
   const mockGroups = [
@@ -48,14 +76,14 @@ const UserCFNGroupTracker = () => {
   ];
 
   const handleSearch = () => {
-    if (!searchAddress.trim()) return;
-    
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setSearchResults(mockGroups);
-      setIsLoading(false);
-    }, 1000);
+    const filtered = groups.filter(group => 
+      group.address?.toLowerCase().includes(searchAddress.toLowerCase()) ||
+      group.group_name?.toLowerCase().includes(searchAddress.toLowerCase()) ||
+      group.city?.toLowerCase().includes(searchAddress.toLowerCase()) ||
+      group.state?.toLowerCase().includes(searchAddress.toLowerCase()) ||
+      group.country?.toLowerCase().includes(searchAddress.toLowerCase())
+    );
+    return filtered;
   };
 
   const handleGroupSelect = (group) => {
@@ -117,14 +145,14 @@ const UserCFNGroupTracker = () => {
       )}
 
       {/* Search Results */}
-      {searchResults.length > 0 && !isLoading && (
+      {(searchAddress ? handleSearch().length > 0 : groups.length > 0) && !isLoading && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Groups List */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               CFN Groups Found
             </h2>
-            {searchResults.map((group) => (
+            {(searchAddress ? handleSearch() : groups).map((group) => (
               <div
                 key={group.id}
                 onClick={() => handleGroupSelect(group)}
@@ -136,19 +164,19 @@ const UserCFNGroupTracker = () => {
               >
                 <div className="space-y-2">
                   <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                    {group.name}
+                    {group.group_name}
                   </h3>
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <FiMapPin className="w-4 h-4" />
-                    <span>{group.address}</span>
+                    <span>{group.address}, {group.city}, {group.state}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <FiClock className="w-4 h-4" />
-                    <span>{group.meetingTime}</span>
+                    <span>CFN Group</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <FiUsers className="w-4 h-4" />
-                    <span>{group.members} {t('members')}</span>
+                    <span>Group ID: {group.id}</span>
                   </div>
                 </div>
               </div>
@@ -165,7 +193,7 @@ const UserCFNGroupTracker = () => {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                      {selectedGroup.name}
+                      {selectedGroup.group_name}
                     </h3>
                   </div>
                   
@@ -174,7 +202,7 @@ const UserCFNGroupTracker = () => {
                       <FiMapPin className="w-5 h-5 text-gray-400 mt-0.5" />
                       <div>
                         <p className="font-medium text-gray-900 dark:text-gray-100">{t('address')}</p>
-                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.address}</p>
+                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.address}, {selectedGroup.city}, {selectedGroup.state}, {selectedGroup.country}</p>
                       </div>
                     </div>
                     
@@ -246,7 +274,7 @@ const UserCFNGroupTracker = () => {
       )}
 
       {/* No Results */}
-      {searchResults.length === 0 && searchAddress && !isLoading && (
+      {searchAddress && handleSearch().length === 0 && !isLoading && (
         <div className="text-center py-8">
           <FiMapPin className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-600 dark:text-gray-400">{t('noResults')}</p>

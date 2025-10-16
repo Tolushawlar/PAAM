@@ -402,6 +402,14 @@ function MemberManagement() {
                           (user.email &&
                             user.email
                               .toLowerCase()
+                              .includes(searchTerm.toLowerCase())) ||
+                          (user.phone &&
+                            user.phone
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase())) ||
+                          (user.occupation &&
+                            user.occupation
+                              .toLowerCase()
                               .includes(searchTerm.toLowerCase()));
 
                         const matchesFilter =

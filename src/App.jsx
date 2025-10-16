@@ -60,7 +60,9 @@ import AdminCFNGroupTracker from './pages/admin/AdminCFNGroupTracker'
 import CoordinatorCFNGroupTracker from './pages/coordinator/CoordinatorCFNGroupTracker'
 import AdminAIChat from './pages/admin/AdminAIChat'
 import CoordinatorAIChat from './pages/coordinator/CoordinatorAIChat'
+import CoordinatorEventManagement from './pages/coordinator/CoordinatorEventManagement'
 import CourseContent from './pages/admin/CourseContent'
+import AdminLiveStreaming from './pages/admin/AdminLiveStreaming'
 
 
 
@@ -100,11 +102,13 @@ function App() {
         <Route path="/admin/ExaminationManagement" element={<ProtectedRoute><Layout><ExaminationManagement/></Layout></ProtectedRoute>} />
         <Route path="/admin/ExaminationManagement/CreateQuiz" element={<ProtectedRoute><Layout><CreateQuiz/></Layout></ProtectedRoute>} />
         <Route path="/admin/EventManagement" element={<ProtectedRoute><Layout><EventManagement/></Layout></ProtectedRoute>} />
+        <Route path="/admin/LiveStreaming" element={<ProtectedRoute><Layout><AdminLiveStreaming/></Layout></ProtectedRoute>} />
         <Route path="/coordinator" element={<ProtectedRoute><Layout><CoordinatorDashboard /></Layout></ProtectedRoute>} />
         <Route path="/coordinator/MemberManagement" element={<ProtectedRoute><Layout><CoordinatorMemberManagement /></Layout></ProtectedRoute>} />
         <Route path="/coordinator/MeetingManagement" element={<ProtectedRoute><Layout><CoordinatorMeetingManagement /></Layout></ProtectedRoute>} />
         <Route path="/coordinator/LiveStreaming" element={<ProtectedRoute><Layout><CoordinatorLiveStreaming /></Layout></ProtectedRoute>} />
         <Route path="/coordinator/MembersDirectory" element={<ProtectedRoute><Layout><CoordinatorMembersDirectory /></Layout></ProtectedRoute>} />
+        <Route path="/coordinator/EventManagement" element={<ProtectedRoute><Layout><CoordinatorEventManagement /></Layout></ProtectedRoute>} />
         <Route path="/user" element={<ProtectedRoute><Layout><UserDashboard /></Layout></ProtectedRoute>} />
         <Route path="/user/Profile" element={<ProtectedRoute><Layout><UserProfile /></Layout></ProtectedRoute>} />
         <Route path="/user/MandateTraining" element={<ProtectedRoute><Layout><UserMandateTraining /></Layout></ProtectedRoute>} />

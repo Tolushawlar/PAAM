@@ -49,13 +49,13 @@ function Login() {
         const userRole = result.data.user_roles;
         switch (userRole) {
           case 1:
-            navigate("/admin");
-            break;
-          case 2:
             navigate("/user");
             break;
-          case 3:
+          case 2:
             navigate("/coordinator");
+            break;
+          case 3:
+            navigate("/admin");
             break;
           default:
             navigate("/user");

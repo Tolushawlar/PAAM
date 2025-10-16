@@ -21,8 +21,14 @@ function UserMandateTraining() {
 
     useEffect(() => {
         if (trainingPrograms.length > 0 && allModules.length > 0) {
+            // Filter for Mandate Training and Global Mandate Training Program
+            const mandatePrograms = trainingPrograms.filter(program => 
+                program.name.toLowerCase().includes('mandate') || 
+                program.name.toLowerCase().includes('global')
+            );
+            
             // Organize modules by training program and stage
-            const organized = trainingPrograms.map(program => {
+            const organized = mandatePrograms.map(program => {
                 const programModules = allModules
                     .filter(module => module.trainingId === program.id)
                     .sort((a, b) => (a.stageOrder || 0) - (b.stageOrder || 0));
@@ -30,8 +36,8 @@ function UserMandateTraining() {
                 // Group modules by stage (assuming stageOrder determines stage)
                 const stages = {};
                 programModules.forEach(module => {
-                    const stageNum = Math.ceil((module.stageOrder || 1) / 5); // 5 modules per stage
-                    const stageName = `Stage ${stageNum}`;
+                    const stageNum = Math.ceil((module.stageOrder || 1) / 4); // 4 modules per stage
+                    const stageName = `Week ${stageNum * 3 - 2}-${stageNum * 3}`; // Convert to week ranges
                     if (!stages[stageName]) {
                         stages[stageName] = [];
                     }

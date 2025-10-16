@@ -26,6 +26,7 @@ function CoordinatorManagement() {
   const refreshCoordinators = async () => {
     setLoading(true);
     setError("");
+    localStorage.removeItem('coordinatorManagementUsers');
     try {
       const response = await fetch(
         "/v1/admin?endpoint=listusers",
@@ -45,6 +46,7 @@ function CoordinatorManagement() {
       }
 
       const result = await response.json();
+      console.log('Coordinators API Response:', result);
 
       if (result.status === "success" && result.data) {
         const coordinatorUsers = result.data.filter(user => user.user_roles === 2);
@@ -110,50 +112,10 @@ function CoordinatorManagement() {
   };
 
   useEffect(() => {
+    // Only load from cache, no automatic API calls
     const cached = localStorage.getItem('coordinatorManagementUsers');
-    if (!cached) {
-      const fetchCoordinators = async () => {
-        try {
-          const response = await fetch(
-            "/v1/admin?endpoint=listusers",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
-              },
-              body: JSON.stringify({}),
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const result = await response.json();
-
-          if (result.status === "success" && result.data) {
-            const coordinatorUsers = result.data.filter(user => user.user_roles === 2);
-            const sortedCoordinators = coordinatorUsers.sort((a, b) => {
-              const dateA = new Date(a.created_at || a.date_joined || 0);
-              const dateB = new Date(b.created_at || b.date_joined || 0);
-              return dateB - dateA;
-            });
-            setCoordinators(sortedCoordinators);
-            localStorage.setItem('coordinatorManagementUsers', JSON.stringify(sortedCoordinators));
-          } else {
-            setError(result.message || "Failed to fetch coordinators");
-          }
-        } catch (error) {
-          console.error("Fetch error:", error);
-          setError(`Network error: ${error.message}`);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchCoordinators();
+    if (cached) {
+      setLoading(false);
     }
   }, []);
 
@@ -334,9 +296,7 @@ function CoordinatorManagement() {
                         )}
                       </div>
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Phone
-                    </th>
+
                     <th
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                       onClick={() => handleSort("status")}
@@ -412,11 +372,7 @@ function CoordinatorManagement() {
                           {coordinator.email?.replace("mailto:", "") || "N/A"}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {coordinator.phone || "N/A"}
-                        </div>
-                      </td>
+
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(

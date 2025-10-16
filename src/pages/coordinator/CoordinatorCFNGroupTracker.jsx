@@ -1,14 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../contexts/AuthContext';
 import { FiSearch, FiMapPin, FiClock, FiPhone, FiUsers, FiInfo, FiEdit } from 'react-icons/fi';
 import Button from '../../UI/Button';
 
 const CoordinatorCFNGroupTracker = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [searchAddress, setSearchAddress] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchCoordinatorGroups();
+    }
+  }, [user]);
+
+  const fetchCoordinatorGroups = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/v1/admin?endpoint=selectentry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
+        },
+        body: JSON.stringify({ table: "cfn_groups" }),
+      });
+
+      const result = await response.json();
+      if (result.status === "success" && result.data) {
+        const coordinatorGroups = result.data.filter(group => group.coordinator_id == user.id);
+        setGroups(coordinatorGroups);
+      }
+    } catch (error) {
+      console.error("Error fetching coordinator groups:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Mock CFN groups data for coordinator view
   const mockGroups = [
@@ -41,13 +74,12 @@ const CoordinatorCFNGroupTracker = () => {
   ];
 
   const handleSearch = () => {
-    if (!searchAddress.trim()) return;
-    
-    setIsLoading(true);
-    setTimeout(() => {
-      setSearchResults(mockGroups);
-      setIsLoading(false);
-    }, 1000);
+    const filtered = groups.filter(group => 
+      group.address?.toLowerCase().includes(searchAddress.toLowerCase()) ||
+      group.group_name?.toLowerCase().includes(searchAddress.toLowerCase()) ||
+      group.city?.toLowerCase().includes(searchAddress.toLowerCase())
+    );
+    return filtered;
   };
 
   const handleGroupSelect = (group) => {
@@ -115,15 +147,15 @@ const CoordinatorCFNGroupTracker = () => {
         </div>
       )}
 
-      {/* Search Results */}
-      {searchResults.length > 0 && !isLoading && (
+      {/* Groups List */}
+      {groups.length > 0 && !isLoading && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Groups List */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               Your CFN Groups
             </h2>
-            {searchResults.map((group) => (
+            {(searchAddress ? handleSearch() : groups).map((group) => (
               <div
                 key={group.id}
                 className={`p-4 rounded-lg border transition-all ${
@@ -138,7 +170,7 @@ const CoordinatorCFNGroupTracker = () => {
                       className="font-semibold text-gray-900 dark:text-gray-100 cursor-pointer hover:text-paam-primary"
                       onClick={() => handleGroupSelect(group)}
                     >
-                      {group.name}
+                      {group.group_name}
                     </h3>
                     <button
                       onClick={() => handleEditGroup(group)}
@@ -149,23 +181,19 @@ const CoordinatorCFNGroupTracker = () => {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <FiMapPin className="w-4 h-4" />
-                    <span>{group.address}</span>
+                    <span>{group.address}, {group.city}, {group.state}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <FiClock className="w-4 h-4" />
-                    <span>{group.meetingTime}</span>
+                    <span>Coordinator Group</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                       <FiUsers className="w-4 h-4" />
-                      <span>{group.members} {t('members')}</span>
+                      <span>Group ID: {group.id}</span>
                     </div>
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      group.status === 'Active' 
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                        : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                    }`}>
-                      {group.status}
+                    <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                      Active
                     </span>
                   </div>
                 </div>
@@ -192,7 +220,7 @@ const CoordinatorCFNGroupTracker = () => {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                      {selectedGroup.name}
+                      {selectedGroup.group_name}
                     </h3>
                     <span className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
                       selectedGroup.status === 'Active' 
@@ -208,7 +236,7 @@ const CoordinatorCFNGroupTracker = () => {
                       <FiMapPin className="w-5 h-5 text-gray-400 mt-0.5" />
                       <div>
                         <p className="font-medium text-gray-900 dark:text-gray-100">{t('address')}</p>
-                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.address}</p>
+                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.address}, {selectedGroup.city}, {selectedGroup.state}, {selectedGroup.country}</p>
                       </div>
                     </div>
                     

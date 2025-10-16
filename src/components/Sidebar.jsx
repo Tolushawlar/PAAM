@@ -26,6 +26,8 @@ import donorsIcon from "../assets/sidebar-icons/donors.svg"
 import donorsIconB from "../assets/sidebar-icons/donors-b.svg"
 import downloadIcon from "../assets/sidebar-icons/download.svg"
 import downloadIconB from "../assets/sidebar-icons/download-b.svg"
+import streamingIcon from "../assets/sidebar-icons/streaming.svg"
+import streamingIconB from "../assets/sidebar-icons/streaming-b.svg"
 
 const Sidebar = ({ userType, onToggle }) => {
   const navigate = useNavigate();
@@ -50,6 +52,7 @@ const Sidebar = ({ userType, onToggle }) => {
     { icon: contentIcon, iconB: contentIconB, label: "Content Management", path: "/admin/content" },
     { icon: examinationIcon, iconB: examinationIconB, label: "Examination Management", path: "/admin/ExaminationManagement" },
     { icon: eventIcon, iconB: eventIconB, label: "Event Management", path: "/admin/EventManagement" },
+    { icon: streamingIcon, iconB: streamingIconB, label: "Live Streaming", path: "/admin/LiveStreaming" },
     { icon: downloadIcon, iconB: downloadIconB, label: t('certificateVerification'), path: "/admin/CertificateVerification" },
     { icon: coordinatorIcon, iconB: coordinatorIconB, label: t('cfnGroupTracker'), path: "/admin/CFNGroupTracker" },
     { icon: contentIcon, iconB: contentIconB, label: t('aiChat'), path: "/admin/AIChat" },

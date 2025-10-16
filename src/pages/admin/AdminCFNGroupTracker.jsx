@@ -1,63 +1,128 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FiSearch, FiMapPin, FiClock, FiPhone, FiUsers, FiInfo, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiSearch, FiMapPin, FiClock, FiPhone, FiUsers, FiInfo, FiEdit, FiTrash2, FiPlus } from 'react-icons/fi';
 import Button from '../../UI/Button';
 
 const AdminCFNGroupTracker = () => {
   const { t } = useTranslation();
   const [searchAddress, setSearchAddress] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [coordinators, setCoordinators] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [formData, setFormData] = useState({
+    coordinator_id: '',
+    group_name: '',
+    country: '',
+    state: '',
+    city: '',
+    address: ''
+  });
 
-  // Mock CFN groups data with admin capabilities
-  const mockGroups = [
-    {
-      id: 1,
-      name: "Downtown CFN Group",
-      address: "123 Main St, Downtown, NY 10001",
-      meetingTime: "Sundays 10:00 AM",
-      contact: "+1 (555) 123-4567",
-      members: 45,
-      description: "A vibrant community focused on spiritual growth and community service.",
-      leader: "Pastor John Smith",
-      established: "2018",
-      status: "Active"
-    },
-    {
-      id: 2,
-      name: "Riverside CFN Fellowship",
-      address: "456 River Ave, Riverside, NY 10002",
-      meetingTime: "Wednesdays 7:00 PM",
-      contact: "+1 (555) 987-6543",
-      members: 32,
-      description: "Family-oriented group with emphasis on youth development and outreach.",
-      leader: "Minister Sarah Johnson",
-      established: "2020",
-      status: "Active"
-    },
-    {
-      id: 3,
-      name: "Hillside CFN Community",
-      address: "789 Hill Rd, Hillside, NY 10003",
-      meetingTime: "Saturdays 6:00 PM",
-      contact: "+1 (555) 456-7890",
-      members: 28,
-      description: "Small, intimate group focused on deep biblical study and prayer.",
-      leader: "Elder Michael Brown",
-      established: "2019",
-      status: "Inactive"
+  useEffect(() => {
+    fetchGroups();
+    fetchCoordinators();
+  }, []);
+
+  const fetchGroups = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/v1/admin?endpoint=selectentry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
+        },
+        body: JSON.stringify({ table: "cfn_groups" }),
+      });
+
+      const result = await response.json();
+      if (result.status === "success" && result.data) {
+        setGroups(result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching groups:", error);
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
+
+  const fetchCoordinators = async () => {
+    try {
+      const response = await fetch("/v1/admin?endpoint=listusers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
+        },
+        body: JSON.stringify({}),
+      });
+
+      const result = await response.json();
+      if (result.status === "success" && result.data) {
+        const coords = result.data.filter(user => user.user_roles === 2);
+        setCoordinators(coords);
+      }
+    } catch (error) {
+      console.error("Error fetching coordinators:", error);
+    }
+  };
+
+  const createGroup = async () => {
+    try {
+      const response = await fetch("/v1/admin?endpoint=addentry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
+        },
+        body: JSON.stringify({
+          table: "cfn_groups",
+          data: formData
+        }),
+      });
+
+      const result = await response.json();
+      if (result.status === "success") {
+        alert('CFN Group created successfully!');
+        setShowCreateForm(false);
+        setFormData({
+          coordinator_id: '',
+          group_name: '',
+          country: '',
+          state: '',
+          city: '',
+          address: ''
+        });
+        fetchGroups();
+      } else {
+        alert('Error creating group: ' + (result.message || 'Unknown error'));
+      }
+    } catch (error) {
+      console.error("Error creating group:", error);
+      alert('Error creating group. Please try again.');
+    }
+  };
 
   const handleSearch = () => {
-    if (!searchAddress.trim()) return;
-    
-    setIsLoading(true);
-    setTimeout(() => {
-      setSearchResults(mockGroups);
-      setIsLoading(false);
-    }, 1000);
+    // Filter groups based on search address
+    const filtered = groups.filter(group => 
+      group.address?.toLowerCase().includes(searchAddress.toLowerCase()) ||
+      group.group_name?.toLowerCase().includes(searchAddress.toLowerCase()) ||
+      group.city?.toLowerCase().includes(searchAddress.toLowerCase())
+    );
+    return filtered;
+  };
+
+  const handleInputChange = (field) => (e) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: e.target.value
+    }));
   };
 
   const handleGroupSelect = (group) => {
@@ -92,7 +157,11 @@ const AdminCFNGroupTracker = () => {
             Manage and track CFN groups across all locations
           </p>
         </div>
-        <Button title="Add New Group" />
+        <Button 
+          title="Add New Group" 
+          icon={<FiPlus className="w-4 h-4" />}
+          onClick={() => setShowCreateForm(true)}
+        />
       </div>
 
       {/* Search Section */}
@@ -131,15 +200,120 @@ const AdminCFNGroupTracker = () => {
         </div>
       )}
 
-      {/* Search Results */}
-      {searchResults.length > 0 && !isLoading && (
+      {/* Create Group Form */}
+      {showCreateForm && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              Create New CFN Group
+            </h2>
+            <button
+              onClick={() => setShowCreateForm(false)}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              ×
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Coordinator
+              </label>
+              <select
+                value={formData.coordinator_id}
+                onChange={handleInputChange('coordinator_id')}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                required
+              >
+                <option value="">Select Coordinator</option>
+                {coordinators.map(coord => (
+                  <option key={coord.id} value={coord.id}>
+                    {coord.firstname} {coord.lastname}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Group Name
+              </label>
+              <input
+                type="text"
+                value={formData.group_name}
+                onChange={handleInputChange('group_name')}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Country
+              </label>
+              <input
+                type="text"
+                value={formData.country}
+                onChange={handleInputChange('country')}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                State
+              </label>
+              <input
+                type="text"
+                value={formData.state}
+                onChange={handleInputChange('state')}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                City
+              </label>
+              <input
+                type="text"
+                value={formData.city}
+                onChange={handleInputChange('city')}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Address
+              </label>
+              <input
+                type="text"
+                value={formData.address}
+                onChange={handleInputChange('address')}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                required
+              />
+            </div>
+          </div>
+          <div className="flex gap-3 mt-6">
+            <Button title="Create Group" onClick={createGroup} />
+            <Button 
+              title="Cancel" 
+              variant="outline" 
+              onClick={() => setShowCreateForm(false)} 
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Groups List */}
+      {groups.length > 0 && !isLoading && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Groups List */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               CFN Groups Found
             </h2>
-            {searchResults.map((group) => (
+            {(searchAddress ? handleSearch() : groups).map((group) => (
               <div
                 key={group.id}
                 className={`p-4 rounded-lg border transition-all ${
@@ -154,7 +328,7 @@ const AdminCFNGroupTracker = () => {
                       className="font-semibold text-gray-900 dark:text-gray-100 cursor-pointer hover:text-paam-primary"
                       onClick={() => handleGroupSelect(group)}
                     >
-                      {group.name}
+                      {group.group_name}
                     </h3>
                     <div className="flex gap-2">
                       <button
@@ -173,24 +347,11 @@ const AdminCFNGroupTracker = () => {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <FiMapPin className="w-4 h-4" />
-                    <span>{group.address}</span>
+                    <span>{group.address}, {group.city}, {group.state}, {group.country}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <FiClock className="w-4 h-4" />
-                    <span>{group.meetingTime}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                      <FiUsers className="w-4 h-4" />
-                      <span>{group.members} {t('members')}</span>
-                    </div>
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      group.status === 'Active' 
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                        : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                    }`}>
-                      {group.status}
-                    </span>
+                    <FiUsers className="w-4 h-4" />
+                    <span>Coordinator ID: {group.coordinator_id}</span>
                   </div>
                 </div>
               </div>
@@ -218,15 +379,8 @@ const AdminCFNGroupTracker = () => {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                      {selectedGroup.name}
+                      {selectedGroup.group_name}
                     </h3>
-                    <span className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
-                      selectedGroup.status === 'Active' 
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                        : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                    }`}>
-                      {selectedGroup.status}
-                    </span>
                   </div>
                   
                   <div className="space-y-3">
@@ -234,52 +388,15 @@ const AdminCFNGroupTracker = () => {
                       <FiMapPin className="w-5 h-5 text-gray-400 mt-0.5" />
                       <div>
                         <p className="font-medium text-gray-900 dark:text-gray-100">{t('address')}</p>
-                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.address}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-3">
-                      <FiClock className="w-5 h-5 text-gray-400 mt-0.5" />
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-gray-100">{t('meetingTime')}</p>
-                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.meetingTime}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-3">
-                      <FiPhone className="w-5 h-5 text-gray-400 mt-0.5" />
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-gray-100">{t('contact')}</p>
-                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.contact}</p>
+                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.address}, {selectedGroup.city}, {selectedGroup.state}, {selectedGroup.country}</p>
                       </div>
                     </div>
                     
                     <div className="flex items-start gap-3">
                       <FiUsers className="w-5 h-5 text-gray-400 mt-0.5" />
                       <div>
-                        <p className="font-medium text-gray-900 dark:text-gray-100">{t('members')}</p>
-                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.members} active members</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-3">
-                      <FiInfo className="w-5 h-5 text-gray-400 mt-0.5" />
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-gray-100">{t('description')}</p>
-                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.description}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-gray-100">Leader</p>
-                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.leader}</p>
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-gray-100">Established</p>
-                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.established}</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">Coordinator ID</p>
+                        <p className="text-gray-600 dark:text-gray-400">{selectedGroup.coordinator_id}</p>
                       </div>
                     </div>
                   </div>
