@@ -13,63 +13,41 @@ const CoordinatorCFNGroupTracker = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (user?.id) {
-      fetchCoordinatorGroups();
-    }
+    // Hard-coded data instead of API call
+    setGroups(mockGroups);
   }, [user]);
 
-  const fetchCoordinatorGroups = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/v1/admin?endpoint=selectentry", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: "Bearer fsdgsdfsdfgv4vwewetvwev",
-        },
-        body: JSON.stringify({ table: "cfn_groups" }),
-      });
-
-      const result = await response.json();
-      if (result.status === "success" && result.data) {
-        const coordinatorGroups = result.data.filter(group => group.coordinator_id == user.id);
-        setGroups(coordinatorGroups);
-      }
-    } catch (error) {
-      console.error("Error fetching coordinator groups:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Mock CFN groups data for coordinator view
+  // Hard-coded CFN groups data
   const mockGroups = [
     {
       id: 1,
-      name: "Downtown CFN Group",
-      address: "123 Main St, Downtown, NY 10001",
+      group_name: "Downtown CFN Group",
+      address: "123 Main St",
+      city: "Downtown",
+      state: "NY",
+      country: "USA",
       meetingTime: "Sundays 10:00 AM",
       contact: "+1 (555) 123-4567",
       members: 45,
       description: "A vibrant community focused on spiritual growth and community service.",
       leader: "Pastor John Smith",
       established: "2018",
-      status: "Active",
-      coordinator: "Current User"
+      status: "Active"
     },
     {
       id: 2,
-      name: "Riverside CFN Fellowship",
-      address: "456 River Ave, Riverside, NY 10002",
+      group_name: "Riverside CFN Fellowship",
+      address: "456 River Ave",
+      city: "Riverside",
+      state: "NY",
+      country: "USA",
       meetingTime: "Wednesdays 7:00 PM",
       contact: "+1 (555) 987-6543",
       members: 32,
       description: "Family-oriented group with emphasis on youth development and outreach.",
       leader: "Minister Sarah Johnson",
       established: "2020",
-      status: "Active",
-      coordinator: "Current User"
+      status: "Active"
     }
   ];
 

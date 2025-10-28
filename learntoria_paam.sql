@@ -144,6 +144,7 @@ CREATE TABLE `devotionals` (
   `devotional_id` int NOT NULL,
   `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `content` text COLLATE utf8mb4_general_ci NOT NULL,
+  `exhortation` text COLLATE utf8mb4_general_ci DEFAULT NULL,
   `audio_url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `day_sequence` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1034,6 +1035,7 @@ ALTER TABLE `event_logs`
 
 --
 -- AUTO_INCREMENT for table `lessons`
+
 --
 ALTER TABLE `lessons`
   MODIFY `lesson_id` int NOT NULL AUTO_INCREMENT;
@@ -1227,6 +1229,186 @@ ALTER TABLE `referrals`
 --
 ALTER TABLE `training_modules`
   ADD CONSTRAINT `training_modules_ibfk_1` FOREIGN KEY (`program_id`) REFERENCES `training_programs` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `prayer_focus`
+--
+
+CREATE TABLE `prayer_focus` (
+  `id` int NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `subtitle` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `actions` text COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `verse_of_the_day`
+--
+
+CREATE TABLE `verse_of_the_day` (
+  `id` int NOT NULL,
+  `bible_verse` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `content` text COLLATE utf8mb4_general_ci NOT NULL,
+  `exhortation` text COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `date` date NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course_completion`
+--
+
+CREATE TABLE `course_completion` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `course_id` int NOT NULL,
+  `completed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `community_spotlight`
+--
+
+CREATE TABLE `community_spotlight` (
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `testimony` text COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resources`
+--
+
+CREATE TABLE `resources` (
+  `id` int NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `url` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `videos`
+--
+
+CREATE TABLE `videos` (
+  `id` int NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `url` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexes for new tables
+--
+
+--
+-- Indexes for table `prayer_focus`
+--
+ALTER TABLE `prayer_focus`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `verse_of_the_day`
+--
+ALTER TABLE `verse_of_the_day`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `date` (`date`);
+
+--
+-- Indexes for table `course_completion`
+--
+ALTER TABLE `course_completion`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `course_id` (`course_id`);
+
+--
+-- Indexes for table `community_spotlight`
+--
+ALTER TABLE `community_spotlight`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `resources`
+--
+ALTER TABLE `resources`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `videos`
+--
+ALTER TABLE `videos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for new tables
+--
+
+--
+-- AUTO_INCREMENT for table `prayer_focus`
+--
+ALTER TABLE `prayer_focus`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `verse_of_the_day`
+--
+ALTER TABLE `verse_of_the_day`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `course_completion`
+--
+ALTER TABLE `course_completion`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `community_spotlight`
+--
+ALTER TABLE `community_spotlight`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `resources`
+--
+ALTER TABLE `resources`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `videos`
+--
+ALTER TABLE `videos`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for new tables
+--
+
+--
+-- Constraints for table `course_completion`
+--
+ALTER TABLE `course_completion`
+  ADD CONSTRAINT `course_completion_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `course_completion_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `training_courses` (`id`) ON DELETE CASCADE;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

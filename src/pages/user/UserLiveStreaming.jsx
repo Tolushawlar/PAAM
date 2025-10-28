@@ -1,6 +1,28 @@
 import { useState, useEffect } from "react";
 import MeetingCard from "../../components/MeetingCard";
 
+// Facebook Live Component for User View
+const FacebookLiveViewer = ({ videoUrl, title }) => {
+  useEffect(() => {
+    if (window.FB) {
+      window.FB.XFBML.parse();
+    }
+  }, [videoUrl]);
+
+  if (!videoUrl) return null;
+
+  return (
+    <div className="bg-white rounded-lg p-4 shadow-sm border">
+      <div
+        className="fb-video"
+        data-href={videoUrl}
+        data-width="100%"
+        data-show-text="false"
+      ></div>
+    </div>
+  );
+};
+
 function UserLiveStreaming() {
   const [streams, setStreams] = useState(() => {
     const cached = localStorage.getItem('userLiveStreams');
@@ -106,17 +128,33 @@ function UserLiveStreaming() {
                 <div key={stream.stream_id} className="bg-red-50 border border-red-200 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{stream.title}</h3>
                   <p className="text-gray-600 mb-4">Started: {new Date(stream.start_time).toLocaleString()}</p>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4 mb-4">
                     <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800">
                       LIVE
                     </span>
-                    <span className="inline-flex px-3 py-1 text-sm font-mono bg-blue-100 text-blue-800 rounded">
-                      Code: {stream.stream_code}
+                    <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${
+                      stream.stream_type === 'facebook' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {stream.stream_type === 'facebook' ? 'Facebook Live' : 'Internal Stream'}
                     </span>
-                    <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                      Join Stream
-                    </button>
+                    {stream.stream_type !== 'facebook' && (
+                      <span className="inline-flex px-3 py-1 text-sm font-mono bg-blue-100 text-blue-800 rounded">
+                        Code: {stream.stream_code}
+                      </span>
+                    )}
+                    {stream.stream_type === 'facebook' ? (
+                      <a href={stream.facebook_url} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Watch on Facebook
+                      </a>
+                    ) : (
+                      <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                        Join Stream
+                      </button>
+                    )}
                   </div>
+                  {stream.stream_type === 'facebook' && stream.facebook_url && (
+                    <FacebookLiveViewer videoUrl={stream.facebook_url} title={stream.title} />
+                  )}
                 </div>
               ))}
             </div>

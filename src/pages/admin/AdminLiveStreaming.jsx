@@ -2,6 +2,29 @@ import { useState, useEffect } from "react";
 import Button from "../../UI/Button";
 import InputField from "../../UI/InputField";
 
+// Facebook Live Component
+const FacebookLive = ({ videoUrl, title }) => {
+  useEffect(() => {
+    if (window.FB) {
+      window.FB.XFBML.parse();
+    }
+  }, [videoUrl]);
+
+  if (!videoUrl) return null;
+
+  return (
+    <div className="bg-white rounded-lg p-4 shadow-sm border">
+      <h3 className="text-lg font-semibold mb-3">{title}</h3>
+      <div
+        className="fb-video"
+        data-href={videoUrl}
+        data-width="500"
+        data-show-text="false"
+      ></div>
+    </div>
+  );
+};
+
 function AdminLiveStreaming() {
     const [streams, setStreams] = useState(() => {
         const cached = localStorage.getItem('adminLiveStreams');
@@ -16,7 +39,9 @@ function AdminLiveStreaming() {
         title: '',
         stream_code: '',
         start_time: '',
-        end_time: ''
+        end_time: '',
+        facebook_url: '',
+        stream_type: 'internal'
     });
 
     useEffect(() => {
@@ -76,7 +101,9 @@ function AdminLiveStreaming() {
                     title: '',
                     stream_code: '',
                     start_time: '',
-                    end_time: ''
+                    end_time: '',
+                    facebook_url: '',
+                    stream_type: 'internal'
                 });
                 fetchStreams();
             } else {
@@ -260,7 +287,8 @@ function AdminLiveStreaming() {
                         <thead className="bg-gray-50">
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stream</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code/URL</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Time</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -284,9 +312,22 @@ function AdminLiveStreaming() {
                                         <div className="text-sm font-medium text-gray-900">{stream.title}</div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className="inline-flex px-2 py-1 text-xs font-mono bg-gray-100 text-gray-800 rounded">
-                                            {stream.stream_code}
+                                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                            stream.stream_type === 'facebook' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                                        }`}>
+                                            {stream.stream_type === 'facebook' ? 'Facebook' : 'Internal'}
                                         </span>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {stream.stream_type === 'facebook' ? (
+                                            <a href={stream.facebook_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-xs">
+                                                Facebook Live
+                                            </a>
+                                        ) : (
+                                            <span className="inline-flex px-2 py-1 text-xs font-mono bg-gray-100 text-gray-800 rounded">
+                                                {stream.stream_code}
+                                            </span>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {new Date(stream.start_time).toLocaleString()}
@@ -318,6 +359,26 @@ function AdminLiveStreaming() {
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            {/* Live Facebook Streams Display */}
+            <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-gray-900">Active Facebook Live Streams</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {streams
+                        .filter(stream => stream.stream_type === 'facebook' && isStreamLive(stream))
+                        .map(stream => (
+                            <FacebookLive 
+                                key={stream.stream_id}
+                                videoUrl={stream.facebook_url}
+                                title={stream.title}
+                            />
+                        ))
+                    }
+                </div>
+                {streams.filter(stream => stream.stream_type === 'facebook' && isStreamLive(stream)).length === 0 && (
+                    <p className="text-gray-500 text-center py-8">No active Facebook Live streams</p>
+                )}
             </div>
         </div>
     );

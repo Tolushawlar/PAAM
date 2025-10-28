@@ -63,6 +63,13 @@ import CoordinatorAIChat from './pages/coordinator/CoordinatorAIChat'
 import CoordinatorEventManagement from './pages/coordinator/CoordinatorEventManagement'
 import CourseContent from './pages/admin/CourseContent'
 import AdminLiveStreaming from './pages/admin/AdminLiveStreaming'
+import PrayerFocusManagement from './pages/admin/PrayerFocusManagement'
+import VerseOfTheDayManagement from './pages/admin/VerseOfTheDayManagement'
+import DevotionalManagement from './pages/admin/DevotionalManagement'
+import CourseCompletionManagement from './pages/admin/CourseCompletionManagement'
+import CommunitySpotlightManagement from './pages/admin/CommunitySpotlightManagement'
+import ResourcesManagement from './pages/admin/ResourcesManagement'
+import VideosManagement from './pages/admin/VideosManagement'
 
 
 
@@ -103,6 +110,13 @@ function App() {
         <Route path="/admin/ExaminationManagement/CreateQuiz" element={<ProtectedRoute><Layout><CreateQuiz/></Layout></ProtectedRoute>} />
         <Route path="/admin/EventManagement" element={<ProtectedRoute><Layout><EventManagement/></Layout></ProtectedRoute>} />
         <Route path="/admin/LiveStreaming" element={<ProtectedRoute><Layout><AdminLiveStreaming/></Layout></ProtectedRoute>} />
+        <Route path="/admin/PrayerFocusManagement" element={<ProtectedRoute><Layout><PrayerFocusManagement/></Layout></ProtectedRoute>} />
+        <Route path="/admin/VerseOfTheDayManagement" element={<ProtectedRoute><Layout><VerseOfTheDayManagement/></Layout></ProtectedRoute>} />
+        <Route path="/admin/DevotionalManagement" element={<ProtectedRoute><Layout><DevotionalManagement/></Layout></ProtectedRoute>} />
+        <Route path="/admin/CourseCompletionManagement" element={<ProtectedRoute><Layout><CourseCompletionManagement/></Layout></ProtectedRoute>} />
+        <Route path="/admin/CommunitySpotlightManagement" element={<ProtectedRoute><Layout><CommunitySpotlightManagement/></Layout></ProtectedRoute>} />
+        <Route path="/admin/ResourcesManagement" element={<ProtectedRoute><Layout><ResourcesManagement/></Layout></ProtectedRoute>} />
+        <Route path="/admin/VideosManagement" element={<ProtectedRoute><Layout><VideosManagement/></Layout></ProtectedRoute>} />
         <Route path="/coordinator" element={<ProtectedRoute><Layout><CoordinatorDashboard /></Layout></ProtectedRoute>} />
         <Route path="/coordinator/MemberManagement" element={<ProtectedRoute><Layout><CoordinatorMemberManagement /></Layout></ProtectedRoute>} />
         <Route path="/coordinator/MeetingManagement" element={<ProtectedRoute><Layout><CoordinatorMeetingManagement /></Layout></ProtectedRoute>} />
