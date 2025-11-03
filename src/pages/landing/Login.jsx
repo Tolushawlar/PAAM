@@ -31,20 +31,9 @@ function Login() {
     setError("");
     
     try {
-      const response = await fetch("/v1/admin?endpoint=loginuser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer fsdgsdfsdfgv4vwewetvwev"
-        },
-        body: JSON.stringify(formData)
-      });
+      const result = await login(formData.email, formData.password);
       
-      const result = await response.json();
-      
-      if (result.status === "success") {
-        login(result.data);
-        
+      if (result.success) {
         // Redirect based on user role
         const userRole = result.data.user_roles;
         switch (userRole) {
@@ -61,7 +50,7 @@ function Login() {
             navigate("/user");
         }
       } else {
-        setError(result.message || "Login failed");
+        setError(result.error || "Login failed");
       }
     } catch (error) {
       setError("Network error. Please try again.");

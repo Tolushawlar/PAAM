@@ -1,49 +1,9 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 const DataContext = createContext();
 
-// Local storage keys
-const STORAGE_KEYS = {
-  TRAINING_PROGRAMS: 'paam_training_programs',
-  TRAINING_MODULES: 'paam_training_modules',
-  TRAINING_COURSES: 'paam_training_courses',
-  QUIZZES: 'paam_quizzes',
-  LAST_FETCH: 'paam_last_fetch'
-};
-
-// Local storage utilities
-const localStorageUtils = {
-  set: (key, data) => {
-    try {
-      localStorage.setItem(key, JSON.stringify(data));
-    } catch (error) {
-      console.error('Error saving to localStorage:', error);
-    }
-  },
-  get: (key) => {
-    try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : null;
-    } catch (error) {
-      console.error('Error reading from localStorage:', error);
-      return null;
-    }
-  },
-  remove: (key) => {
-    try {
-      localStorage.removeItem(key);
-    } catch (error) {
-      console.error('Error removing from localStorage:', error);
-    }
-  },
-  clear: () => {
-    try {
-      Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
-    } catch (error) {
-      console.error('Error clearing localStorage:', error);
-    }
-  }
-};
+const API_BASE_URL = '/v1/admin';
+const API_TOKEN = 'fsdgsdfsdfgv4vwewetvwev';
 
 export const useData = () => {
   const context = useContext(DataContext);
@@ -64,12 +24,11 @@ export const DataProvider = ({ children }) => {
   const [members, setMembers] = useState([]);
   const [coordinators, setCoordinators] = useState([]);
   const [loading, setLoading] = useState({});
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [cache, setCache] = useState({});
+  const [cacheTimestamps, setCacheTimestamps] = useState({});
 
-  // Load data from localStorage on initialization
-  useEffect(() => {
-    loadFromLocalStorage();
-  }, []);
+  // Cache duration in milliseconds (5 minutes)
+  const CACHE_DURATION = 5 * 60 * 1000;
 
   const apiCall = async (endpoint, body) => {
     const response = await fetch(`/v1/admin?endpoint=${endpoint}`, {
@@ -94,19 +53,21 @@ export const DataProvider = ({ children }) => {
     return await response.json();
   };
 
-  // Load data from localStorage
-  const loadFromLocalStorage = () => {
-    const programs = localStorageUtils.get(STORAGE_KEYS.TRAINING_PROGRAMS) || [];
-    const modules = localStorageUtils.get(STORAGE_KEYS.TRAINING_MODULES) || [];
-    const courses = localStorageUtils.get(STORAGE_KEYS.TRAINING_COURSES) || [];
-    const quizzes = localStorageUtils.get(STORAGE_KEYS.QUIZZES) || [];
-    
-    setTrainingPrograms(programs);
-    setAllModules(modules);
-    setAllCourses(courses);
-    setAllQuizzes(quizzes);
-    
-    // Organize modules by program
+  // Check if cache is valid
+  const isCacheValid = (key) => {
+    const timestamp = cacheTimestamps[key];
+    if (!timestamp) return false;
+    return Date.now() - timestamp < CACHE_DURATION;
+  };
+
+  // Update cache
+  const updateCache = (key, data) => {
+    setCache(prev => ({ ...prev, [key]: data }));
+    setCacheTimestamps(prev => ({ ...prev, [key]: Date.now() }));
+  };
+
+  // Organize data helper functions
+  const organizeModulesByProgram = (modules) => {
     const modulesByProg = {};
     modules.forEach(module => {
       if (!modulesByProg[module.trainingId]) {
@@ -114,9 +75,10 @@ export const DataProvider = ({ children }) => {
       }
       modulesByProg[module.trainingId].push(module);
     });
-    setModulesByProgram(modulesByProg);
-    
-    // Organize courses by module
+    return modulesByProg;
+  };
+
+  const organizeCoursesByModule = (courses) => {
     const coursesByMod = {};
     courses.forEach(course => {
       if (!coursesByMod[course.moduleId]) {
@@ -124,9 +86,10 @@ export const DataProvider = ({ children }) => {
       }
       coursesByMod[course.moduleId].push(course);
     });
-    setCoursesByModule(coursesByMod);
-    
-    // Organize quizzes by course
+    return coursesByMod;
+  };
+
+  const organizeQuizzesByCourse = (quizzes) => {
     const quizzesByCrs = {};
     quizzes.forEach(quiz => {
       if (!quizzesByCrs[quiz.lesson]) {
@@ -134,13 +97,16 @@ export const DataProvider = ({ children }) => {
       }
       quizzesByCrs[quiz.lesson].push(quiz);
     });
-    setQuizzesByCourse(quizzesByCrs);
-    
-    setIsDataLoaded(programs.length > 0 || modules.length > 0 || courses.length > 0 || quizzes.length > 0);
+    return quizzesByCrs;
   };
 
-  // Fetch all training data and store in localStorage
-  const fetchAllTrainingData = async () => {
+  // Fetch all training data directly from API
+  const fetchAllTrainingData = async (force = false) => {
+    // Check cache first
+    if (!force && isCacheValid('allTrainingData')) {
+      return cache.allTrainingData;
+    }
+
     setLoading(prev => ({ ...prev, allTrainingData: true }));
     
     try {
@@ -201,12 +167,10 @@ export const DataProvider = ({ children }) => {
         }));
       }
 
-      // Store in localStorage
-      localStorageUtils.set(STORAGE_KEYS.TRAINING_PROGRAMS, programs);
-      localStorageUtils.set(STORAGE_KEYS.TRAINING_MODULES, modules);
-      localStorageUtils.set(STORAGE_KEYS.TRAINING_COURSES, courses);
-      localStorageUtils.set(STORAGE_KEYS.QUIZZES, quizzes);
-      localStorageUtils.set(STORAGE_KEYS.LAST_FETCH, new Date().toISOString());
+      const result = { programs, modules, courses, quizzes };
+      
+      // Update cache
+      updateCache('allTrainingData', result);
 
       // Update state
       setTrainingPrograms(programs);
@@ -214,88 +178,84 @@ export const DataProvider = ({ children }) => {
       setAllCourses(courses);
       setAllQuizzes(quizzes);
       
-      // Organize modules by program
-      const modulesByProg = {};
-      modules.forEach(module => {
-        if (!modulesByProg[module.trainingId]) {
-          modulesByProg[module.trainingId] = [];
-        }
-        modulesByProg[module.trainingId].push(module);
-      });
+      // Organize data
+      const modulesByProg = organizeModulesByProgram(modules);
+      const coursesByMod = organizeCoursesByModule(courses);
+      const quizzesByCrs = organizeQuizzesByCourse(quizzes);
+      
       setModulesByProgram(modulesByProg);
-      
-      // Organize courses by module
-      const coursesByMod = {};
-      courses.forEach(course => {
-        if (!coursesByMod[course.moduleId]) {
-          coursesByMod[course.moduleId] = [];
-        }
-        coursesByMod[course.moduleId].push(course);
-      });
       setCoursesByModule(coursesByMod);
-      
-      // Organize quizzes by course
-      const quizzesByCrs = {};
-      quizzes.forEach(quiz => {
-        if (!quizzesByCrs[quiz.lesson]) {
-          quizzesByCrs[quiz.lesson] = [];
-        }
-        quizzesByCrs[quiz.lesson].push(quiz);
-      });
       setQuizzesByCourse(quizzesByCrs);
       
-      setIsDataLoaded(true);
-      
-      return { programs, modules, courses, quizzes };
+      return result;
     } catch (error) {
       console.error("Error fetching all training data:", error);
-      return { programs: [], modules: [], courses: [] };
+      return { programs: [], modules: [], courses: [], quizzes: [] };
     } finally {
       setLoading(prev => ({ ...prev, allTrainingData: false }));
     }
   };
 
   const fetchTrainingPrograms = async (force = false) => {
-    // Always return from localStorage if available
+    // Return from state if available and not forcing refresh
     if (trainingPrograms.length > 0 && !force) return trainingPrograms;
     
-    // If no data in localStorage, fetch all data
-    if (!isDataLoaded) {
-      const result = await fetchAllTrainingData();
-      return result.programs;
+    // Check cache first
+    if (!force && isCacheValid('programs')) {
+      return cache.programs || [];
     }
     
-    return trainingPrograms;
+    // Fetch from API
+    const result = await fetchAllTrainingData(force);
+    return result.programs || [];
   };
 
   const fetchModules = async (programId, force = false) => {
-    // Always return from localStorage if available
+    // Return from state if available and not forcing refresh
     if (modulesByProgram[programId] && !force) return modulesByProgram[programId];
     
-    // If no data in localStorage, fetch all data first
-    if (!isDataLoaded) {
-      await fetchAllTrainingData();
+    // Check cache first
+    const cacheKey = `modules_${programId}`;
+    if (!force && isCacheValid(cacheKey)) {
+      return cache[cacheKey] || [];
     }
     
-    // Return modules for the specific program from localStorage
-    return modulesByProgram[programId] || [];
+    // Fetch all data if not available
+    await fetchAllTrainingData(force);
+    
+    // Return modules for the specific program
+    const modules = modulesByProgram[programId] || [];
+    updateCache(cacheKey, modules);
+    return modules;
   };
 
   const fetchCourses = async (moduleId, force = false) => {
-    // Always return from localStorage if available
+    // Return from state if available and not forcing refresh
     if (coursesByModule[moduleId] && !force) return coursesByModule[moduleId];
     
-    // If no data in localStorage, fetch all data first
-    if (!isDataLoaded) {
-      await fetchAllTrainingData();
+    // Check cache first
+    const cacheKey = `courses_${moduleId}`;
+    if (!force && isCacheValid(cacheKey)) {
+      return cache[cacheKey] || [];
     }
     
-    // Return courses for the specific module from localStorage
-    return coursesByModule[moduleId] || [];
+    // Fetch all data if not available
+    await fetchAllTrainingData(force);
+    
+    // Return courses for the specific module
+    const courses = coursesByModule[moduleId] || [];
+    updateCache(cacheKey, courses);
+    return courses;
   };
 
   const fetchMembers = async (force = false) => {
+    // Return from state if available and not forcing refresh
     if (members.length > 0 && !force) return members;
+    
+    // Check cache first
+    if (!force && isCacheValid('members')) {
+      return cache.members || [];
+    }
     
     setLoading(prev => ({ ...prev, members: true }));
     try {
@@ -313,6 +273,7 @@ export const DataProvider = ({ children }) => {
             user_roles: user.user_roles
           }));
         setMembers(mapped);
+        updateCache('members', mapped);
         return mapped;
       }
     } catch (error) {
@@ -324,7 +285,13 @@ export const DataProvider = ({ children }) => {
   };
 
   const fetchCoordinators = async (force = false) => {
+    // Return from state if available and not forcing refresh
     if (coordinators.length > 0 && !force) return coordinators;
+    
+    // Check cache first
+    if (!force && isCacheValid('coordinators')) {
+      return cache.coordinators || [];
+    }
     
     setLoading(prev => ({ ...prev, coordinators: true }));
     try {
@@ -342,6 +309,7 @@ export const DataProvider = ({ children }) => {
             user_roles: user.user_roles
           }));
         setCoordinators(mapped);
+        updateCache('coordinators', mapped);
         return mapped;
       }
     } catch (error) {
@@ -355,28 +323,29 @@ export const DataProvider = ({ children }) => {
   const refreshData = async (type, id = null) => {
     switch (type) {
       case 'trainingPrograms':
-        await fetchAllTrainingData();
-        return trainingPrograms;
+        const result = await fetchAllTrainingData(true);
+        return result.programs || [];
       case 'modules':
-        await fetchAllTrainingData();
+        await fetchAllTrainingData(true);
         return modulesByProgram[id] || [];
       case 'courses':
-        await fetchAllTrainingData();
+        await fetchAllTrainingData(true);
         return coursesByModule[id] || [];
       case 'members':
         return fetchMembers(true);
       case 'coordinators':
         return fetchCoordinators(true);
       case 'all':
-        return fetchAllTrainingData();
+        return fetchAllTrainingData(true);
       default:
         return Promise.resolve([]);
     }
   };
 
-  // Clear all training data from localStorage
+  // Clear all cached data
   const clearTrainingData = () => {
-    localStorageUtils.clear();
+    setCache({});
+    setCacheTimestamps({});
     setTrainingPrograms([]);
     setModulesByProgram({});
     setCoursesByModule({});
@@ -384,12 +353,15 @@ export const DataProvider = ({ children }) => {
     setAllCourses([]);
     setAllQuizzes([]);
     setQuizzesByCourse({});
-    setIsDataLoaded(false);
   };
 
-  // Get last fetch timestamp
-  const getLastFetchTime = () => {
-    return localStorageUtils.get(STORAGE_KEYS.LAST_FETCH);
+  // Get cache status
+  const getCacheStatus = () => {
+    return {
+      hasCache: Object.keys(cache).length > 0,
+      cacheKeys: Object.keys(cache),
+      timestamps: cacheTimestamps
+    };
   };
 
   // Quiz operations
@@ -397,10 +369,10 @@ export const DataProvider = ({ children }) => {
     try {
       const response = await apiCall('addentry', {
         table: 'quizzes',
-        data: quizData
+        ...quizData
       });
       if (response.status === 'success') {
-        await fetchAllTrainingData(); // Refresh data
+        await fetchAllTrainingData(true); // Refresh data
         return { success: true, data: response };
       }
       return { success: false, error: response.message };
@@ -414,10 +386,10 @@ export const DataProvider = ({ children }) => {
       const response = await apiCall('updateentry', {
         table: 'quizzes',
         id: quizId,
-        data: quizData
+        ...quizData
       });
       if (response.status === 'success') {
-        await fetchAllTrainingData(); // Refresh data
+        await fetchAllTrainingData(true); // Refresh data
         return { success: true, data: response };
       }
       return { success: false, error: response.message };
@@ -426,7 +398,12 @@ export const DataProvider = ({ children }) => {
     }
   };
 
-  const fetchQuizzes = async (courseId = null) => {
+  const fetchQuizzes = async (courseId = null, force = false) => {
+    // Ensure we have quiz data
+    if (allQuizzes.length === 0 || force) {
+      await fetchAllTrainingData(force);
+    }
+    
     if (courseId) {
       return quizzesByCourse[courseId] || [];
     }
@@ -444,7 +421,8 @@ export const DataProvider = ({ children }) => {
     members,
     coordinators,
     loading,
-    isDataLoaded,
+    cache,
+    cacheTimestamps,
     fetchTrainingPrograms,
     fetchModules,
     fetchCourses,
@@ -453,7 +431,7 @@ export const DataProvider = ({ children }) => {
     fetchAllTrainingData,
     refreshData,
     clearTrainingData,
-    getLastFetchTime,
+    getCacheStatus,
     createQuiz,
     updateQuiz,
     fetchQuizzes,
